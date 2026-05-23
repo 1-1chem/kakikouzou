@@ -6,17 +6,20 @@
   <title>有機化学 構造式クイズ (スマホ最適化大画面版)</title>
   <style>
     body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; margin: 0; padding: 15px; background: #f5f5f5; box-sizing: border-box; }
-    .quiz-container { width: 100%; max-width: 500px; display: flex; flex-direction: column; align-items: center; }
-    #scoreBox { width:100%; display:flex; align-items:center; gap:14px; font-size:18px; font-weight:bold; margin-bottom:12px; background:#e3f2fd; padding:10px 16px; border-radius:20px; border:1px solid #90caf9; color:#0d47a1; box-sizing:border-box;}    
-    #questionBox { width: 100%; min-height: 70px; background: white; border: 2px solid #666; border-radius: 8px; margin-bottom: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 22px; font-weight: bold; padding: 10px; box-sizing: border-box; text-align: center; }
-    #display { position: relative; width: 100%; aspect-ratio: 5 / 3; border: 1px solid #aaa; background: white; border-radius: 8px; box-sizing: border-box; }
+    .quiz-container { width: 100%; max-width: 380px; display: flex; flex-direction: column; align-items: center; }
+    #scoreBox {margin:0 auto 12px auto;}
+    #scoreBox { width:90%; display:flex; align-items:center; gap:14px; font-size:18px; font-weight:bold; margin-bottom:12px; background:#e3f2fd; padding:10px 16px; border-radius:20px; border:1px solid #90caf9; color:#0d47a1; box-sizing:border-box;}    
+    #questionBox { width:90%; margin:0 auto 6px auto;}
+    #questionBox { min-height: 70px; background: white; border: 2px solid #666; border-radius: 8px; margin-bottom: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 22px; font-weight: bold; padding: 10px; box-sizing: border-box; text-align: center; }
+    #display { position: relative; width: 90%; aspect-ratio: 5 / 3; border: 1px solid #aaa; background: white; border-radius: 8px; box-sizing: border-box; }
     #canvas { width: 100%; height: 100%; display: block; }
     #buttonArea { margin-top: 12px; text-align: center; width: 100%; }
     .buttonRow { display: flex; justify-content: center; margin-bottom: 4px; }
-    .elementBtn { width: 50px; height: 46px; margin: 3px; padding: 0; border: 1px solid #888; background: linear-gradient(to bottom, #ffffff, #e6e6e6); border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18); font-size: 20px; font-family: Arial; font-weight: bold; cursor: pointer; box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; vertical-align: bottom; -webkit-tap-highlight-color: transparent; }
+    .elementBtn { width: 42px; height: 40px; margin: 3px; padding: 0; border: 1px solid #888; background: linear-gradient(to bottom, #ffffff, #e6e6e6); border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18); font-size: 18px; font-family: Arial; font-weight: bold; cursor: pointer; box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; vertical-align: bottom; -webkit-tap-highlight-color: transparent; }
     .elementBtn:hover { background: linear-gradient(to bottom, #ffffff, #dcdcdc); }
     .elementBtn:active { transform: translateY(2px); }
-    #controlArea { margin-top: 15px; display: flex; gap: 12px; align-items: center; width: 100%; }
+    #controlArea { width:90%; margin:15px auto 0 auto;}
+    #controlArea { margin-top: 15px; display: flex; gap: 12px; align-items: center; }
     #submitBtn, #actionBtn { flex: 1; font-size: 18px; font-weight: bold; padding: 12px 0; border-radius: 8px; border: none; cursor: pointer; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); text-align: center; }
     #submitBtn { background-color: #4caf50; color: white; }
     #submitBtn:disabled { background-color: #ccc; cursor: not-allowed; box-shadow: none; }
