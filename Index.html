@@ -1,139 +1,138 @@
-次のコードは重複しているところがあります。重複部分を取り除いてきれいなコードにしてください。
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>有機化学 構造式クイズ (スマホ最適化大画面版)</title>
-  <style>
-    body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; margin: 0; padding: 15px; background: #f5f5f5; box-sizing: border-box; }
-    .quiz-container { width: 100%; max-width: 500px; display: flex; flex-direction: column; align-items: center; }
-    #scoreBox { width:100%; display:flex; align-items:center; gap:14px; font-size:18px; font-weight:bold; margin-bottom:12px; background:#e3f2fd; padding:10px 16px; border-radius:20px; border:1px solid #90caf9; color:#0d47a1; box-sizing:border-box;}    
-    #questionBox { width: 100%; min-height: 70px; background: white; border: 2px solid #666; border-radius: 8px; margin-bottom: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 22px; font-weight: bold; padding: 10px; box-sizing: border-box; text-align: center; }
-    #display { position: relative; width: 100%; aspect-ratio: 5 / 3; border: 1px solid #aaa; background: white; border-radius: 8px; box-sizing: border-box; }
-    #canvas { width: 100%; height: 100%; display: block; }
-    #buttonArea { margin-top: 12px; text-align: center; width: 100%; }
-    .buttonRow { display: flex; justify-content: center; margin-bottom: 4px; }
-    .elementBtn { width: 50px; height: 46px; margin: 3px; padding: 0; border: 1px solid #888; background: linear-gradient(to bottom, #ffffff, #e6e6e6); border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18); font-size: 20px; font-family: Arial; font-weight: bold; cursor: pointer; box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; vertical-align: bottom; -webkit-tap-highlight-color: transparent; }
-    .elementBtn:hover { background: linear-gradient(to bottom, #ffffff, #dcdcdc); }
-    .elementBtn:active { transform: translateY(2px); }
-    #controlArea { margin-top: 15px; display: flex; gap: 12px; align-items: center; width: 100%; }
-    #submitBtn, #actionBtn { flex: 1; font-size: 18px; font-weight: bold; padding: 12px 0; border-radius: 8px; border: none; cursor: pointer; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); text-align: center; }
-    #submitBtn { background-color: #4caf50; color: white; }
-    #submitBtn:disabled { background-color: #ccc; cursor: not-allowed; box-shadow: none; }
-    #actionBtn { background-color: #ff9800; color: white; }
-    #messageBox { margin-top: 12px; font-size: 18px; font-weight: bold; min-height: 27px; text-align: center; }
-    /* =====================
-        説明画面
-    ===================== */
-    #introScreen{position:fixed; inset:0; background:#f5f5f5; display:flex; justify-content:center; align-items:center; z-index:9999;}
-    #introBox{ width:min(92%, 650px);  background:white;  border-radius:18px; padding:28px; box-sizing:border-box; box-shadow:0 4px 18px rgba(0,0,0,0.2);}
-    #introBox h1{ text-align:center; margin-top:0; color:#1565c0;}
-    #introText{ font-size:18px; line-height:1.8;}
-    #introText ul{ padding-left:24px;}
-    .warning{ margin-top:18px; padding:14px; border-radius:10px; background:#fff3e0; color:#d84315; font-weight:bold;}
-    #startGameBtn{ width:100%; margin-top:20px; padding:16px 0; font-size:22px; font-weight:bold; border:none; border-radius:12px; background:#4caf50; color:white; cursor:pointer;}
-    /* =====================
-    HPバー
-    ===================== */
-    #hpBarOuter{ flex:1; height:20px; background:#ddd; border-radius:10px; overflow:hidden;}
-    #hpBarInner{ width:100%; height:100%; background: linear-gradient(to right, #66bb6a, #43a047 ); transition:width 0.3s;}
-    /* =====================
-    残り問題バー
-    ===================== */
-    #questionGauge{position:fixed; left:10px; top:20px; width:22px; height:80vh; background:#ddd; border-radius:12px; overflow:hidden; border:2px solid #999; z-index:999;}
-    #questionGaugeInner{ position:absolute; bottom:0; width:100%; height:100%; background: linear-gradient( to top,  #42a5f5,  #1565c0  ); transition: height 0.5s ease,  background 0.5s;}
-    /* =====================
-       目盛り
-    ===================== */
-    #gaugeMarks{ position:absolute; inset:0; z-index:5; pointer-events:none;}
-    .gaugeMark{ position:absolute; left:0; width:100%; height:2px; background: rgba(255,255,255,0.85);}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>有機化学 構造式クイズ (スマホ最適化大画面版)</title>
+  <style>
+    body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; margin: 0; padding: 15px; background: #f5f5f5; box-sizing: border-box; }
+    .quiz-container { width: 100%; max-width: 500px; display: flex; flex-direction: column; align-items: center; }
+    #scoreBox { width:100%; display:flex; align-items:center; gap:14px; font-size:18px; font-weight:bold; margin-bottom:12px; background:#e3f2fd; padding:10px 16px; border-radius:20px; border:1px solid #90caf9; color:#0d47a1; box-sizing:border-box;}    
+    #questionBox { width: 100%; min-height: 70px; background: white; border: 2px solid #666; border-radius: 8px; margin-bottom: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 22px; font-weight: bold; padding: 10px; box-sizing: border-box; text-align: center; }
+    #display { position: relative; width: 100%; aspect-ratio: 5 / 3; border: 1px solid #aaa; background: white; border-radius: 8px; box-sizing: border-box; }
+    #canvas { width: 100%; height: 100%; display: block; }
+    #buttonArea { margin-top: 12px; text-align: center; width: 100%; }
+    .buttonRow { display: flex; justify-content: center; margin-bottom: 4px; }
+    .elementBtn { width: 50px; height: 46px; margin: 3px; padding: 0; border: 1px solid #888; background: linear-gradient(to bottom, #ffffff, #e6e6e6); border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18); font-size: 20px; font-family: Arial; font-weight: bold; cursor: pointer; box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; vertical-align: bottom; -webkit-tap-highlight-color: transparent; }
+    .elementBtn:hover { background: linear-gradient(to bottom, #ffffff, #dcdcdc); }
+    .elementBtn:active { transform: translateY(2px); }
+    #controlArea { margin-top: 15px; display: flex; gap: 12px; align-items: center; width: 100%; }
+    #submitBtn, #actionBtn { flex: 1; font-size: 18px; font-weight: bold; padding: 12px 0; border-radius: 8px; border: none; cursor: pointer; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); text-align: center; }
+    #submitBtn { background-color: #4caf50; color: white; }
+    #submitBtn:disabled { background-color: #ccc; cursor: not-allowed; box-shadow: none; }
+    #actionBtn { background-color: #ff9800; color: white; }
+    #messageBox { margin-top: 12px; font-size: 18px; font-weight: bold; min-height: 27px; text-align: center; }
+    /* =====================
+        説明画面
+    ===================== */
+    #introScreen{position:fixed; inset:0; background:#f5f5f5; display:flex; justify-content:center; align-items:center; z-index:9999;}
+    #introBox{ width:min(92%, 650px);  background:white;  border-radius:18px; padding:28px; box-sizing:border-box; box-shadow:0 4px 18px rgba(0,0,0,0.2);}
+    #introBox h1{ text-align:center; margin-top:0; color:#1565c0;}
+    #introText{ font-size:18px; line-height:1.8;}
+    #introText ul{ padding-left:24px;}
+    .warning{ margin-top:18px; padding:14px; border-radius:10px; background:#fff3e0; color:#d84315; font-weight:bold;}
+    #startGameBtn{ width:100%; margin-top:20px; padding:16px 0; font-size:22px; font-weight:bold; border:none; border-radius:12px; background:#4caf50; color:white; cursor:pointer;}
+    /* =====================
+    HPバー
+    ===================== */
+    #hpBarOuter{ flex:1; height:20px; background:#ddd; border-radius:10px; overflow:hidden;}
+    #hpBarInner{ width:100%; height:100%; background: linear-gradient(to right, #66bb6a, #43a047 ); transition:width 0.3s;}
+    /* =====================
+    残り問題バー
+    ===================== */
+    #questionGauge{position:fixed; left:10px; top:20px; width:22px; height:80vh; background:#ddd; border-radius:12px; overflow:hidden; border:2px solid #999; z-index:999;}
+    #questionGaugeInner{ position:absolute; bottom:0; width:100%; height:100%; background: linear-gradient( to top,  #42a5f5,  #1565c0  ); transition: height 0.5s ease,  background 0.5s;}
+    /* =====================
+       目盛り
+    ===================== */
+    #gaugeMarks{ position:absolute; inset:0; z-index:5; pointer-events:none;}
+    .gaugeMark{ position:absolute; left:0; width:100%; height:2px; background: rgba(255,255,255,0.85);}
 .explodedText{
 
-  color: black;
+  color: black;
 
-  -webkit-text-stroke: 1px white;
+  -webkit-text-stroke: 1px white;
 
 }
 
 /* ======================
-   GAME OVER画面
+   GAME OVER画面
 ====================== */
 
 #gameOverScreen{
 
-  position:fixed;
+  position:fixed;
 
-  inset:0;
+  inset:0;
 
-  background:black;
+  background:black;
 
-  display:none;
+  display:none;
 
-  justify-content:center;
+  justify-content:center;
 
-  align-items:center;
+  align-items:center;
 
-  z-index:20000;
+  z-index:20000;
 }
 
 #gameOverBox{
 
-  text-align:center;
+  text-align:center;
 }
 
 #gameOverTitle{
 
-  font-size:64px;
+  font-size:64px;
 
-  font-weight:bold;
+  font-weight:bold;
 
-  color:#ff5252;
+  color:#ff5252;
 
-  letter-spacing:6px;
+  letter-spacing:6px;
 
-  margin-bottom:40px;
+  margin-bottom:40px;
 
-  text-shadow:
-    0 0 12px red,
-    0 0 30px red;
+  text-shadow:
+    0 0 12px red,
+    0 0 30px red;
 }
 
-#restartBtn{  font-size:28px;  padding:18px 42px;  border:none;  border-radius:16px;  background:#1976d2;  color:white;  font-weight:bold;  cursor:pointer;  box-shadow:  0 0 20px rgba(255,255,255,0.3);}
+#restartBtn{  font-size:28px;  padding:18px 42px;  border:none;  border-radius:16px;  background:#1976d2;  color:white;  font-weight:bold;  cursor:pointer;  box-shadow:  0 0 20px rgba(255,255,255,0.3);}
 
-#restartBtn:hover{  transform:scale(1.05);}
+#restartBtn:hover{  transform:scale(1.05);}
 #clearScreen{
-  position:fixed;
-  inset:0;
-  background:black;
-  overflow:hidden;
-  z-index:99999;
+  position:fixed;
+  inset:0;
+  background:black;
+  overflow:hidden;
+  z-index:99999;
 }
 
 #fireworks{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
 }
 
 #clearText{
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  text-align:center;
-  color:white;
-  z-index:10;
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  text-align:center;
+  color:white;
+  z-index:10;
 }
 
 #clearText h1{
-  font-size:64px;
-  margin:0;
+  font-size:64px;
+  margin:0;
 }
 
 #clearText p{
-  font-size:28px;
+  font-size:28px;
 }
 
 </style>
@@ -142,75 +141,75 @@
 
 <!-- 説明画面 -->
 <div id="introScreen">
-  <div id="introBox">
-    <h1>構造式クイズ</h1>
-    <div id="introText">
-      <h2>このゲームでの構造式のルール</h2>
-      <ul>
-        <li>単結合は省略できることがある</li>
-        <li>二重結合や三重結合は省略できない</li>
-        <li>メチル基はCH<sub>3</sub>，メチレン基はCH<sub>2</sub>，メチンはCHと表記する </li>
-        <li>水に溶けやすい物質は，＋や－の電荷を表記する </li>
-        <li>HPが0になるとゲームオーバー </li>
-      </ul>
-      <p class="warning">
-        化学的に正しい構造でも，PCが正解と判定できない場合は，不正解になることがあります
-      </p>
-    </div>
-    <button id="startGameBtn">
-      ゲームスタート
-    </button>
-  </div>
+  <div id="introBox">
+    <h1>構造式クイズ</h1>
+    <div id="introText">
+      <h2>このゲームでの構造式のルール</h2>
+      <ul>
+        <li>単結合は省略できることがある</li>
+        <li>二重結合や三重結合は省略できない</li>
+        <li>メチル基はCH<sub>3</sub>，メチレン基はCH<sub>2</sub>，メチンはCHと表記する </li>
+        <li>水に溶けやすい物質は，＋や－の電荷を表記する </li>
+        <li>HPが0になるとゲームオーバー </li>
+      </ul>
+      <p class="warning">
+        化学的に正しい構造でも，PCが正解と判定できない場合は，不正解になることがあります
+      </p>
+    </div>
+    <button id="startGameBtn">
+      ゲームスタート
+    </button>
+  </div>
 </div>
 <!-- 残り問題バー -->
 <div id="questionGauge">
-  <div id="gaugeMarks"></div>
-  <div id="questionGaugeInner"></div>
+  <div id="gaugeMarks"></div>
+  <div id="questionGaugeInner"></div>
 </div>
 <div class="quiz-container">
-  <div id="scoreBox">
-    <div id="hpText">
-      HP：
-      <span id="score">100</span>
-    </div>
-    <div id="hpBarOuter">
-      <div id="hpBarInner"></div>
-    </div>
-  </div>
-  <div id="questionBox">問題読み込み中...</div>
-  <div id="display">
-    <canvas id="canvas" width="800" height="480"></canvas>
-  </div>
-  <div id="controlArea">
-    <button id="submitBtn">解答提出</button>
-    <button id="actionBtn" style="display: none;"></button>
-  </div>
-  <div id="messageBox"></div>
-  <div id="buttonArea"></div>
+  <div id="scoreBox">
+    <div id="hpText">
+      HP：
+      <span id="score">100</span>
+    </div>
+    <div id="hpBarOuter">
+      <div id="hpBarInner"></div>
+    </div>
+  </div>
+  <div id="questionBox">問題読み込み中...</div>
+  <div id="display">
+    <canvas id="canvas" width="800" height="480"></canvas>
+  </div>
+  <div id="controlArea">
+    <button id="submitBtn">解答提出</button>
+    <button id="actionBtn" style="display: none;"></button>
+  </div>
+  <div id="messageBox"></div>
+  <div id="buttonArea"></div>
 </div>
 <!-- GAME OVER画面 -->
 <div id="gameOverScreen">
 
-  <div id="gameOverBox">
+  <div id="gameOverBox">
 
-    <div id="gameOverTitle">
-      GAME OVER
-    </div>
+    <div id="gameOverTitle">
+      GAME OVER
+    </div>
 
-    <button id="restartBtn">
-      もう1回ゲームをする
-    </button>
+    <button id="restartBtn">
+      もう1回ゲームをする
+    </button>
 
-  </div>
+  </div>
 
-  <div id="clearScreen">
-    <canvas id="fireworks"></canvas>
+  <div id="clearScreen">
+    <canvas id="fireworks"></canvas>
 
-    <div id="clearText">
-      <h1>CONGRATULATIONS!</h1>
-      <p>全40問クリア！</p>
-    </div>
-  </div>
+    <div id="clearText">
+      <h1>CONGRATULATIONS!</h1>
+      <p>全40問クリア！</p>
+    </div>
+  </div>
 
 </div>
 <script>
@@ -223,10 +222,10 @@ const clickSound = new Audio( "https://raw.githubusercontent.com/1-1chem/kouzous
 // 不正解
 const missSound = new Audio( "https://raw.githubusercontent.com/1-1chem/kouzousikigame/main/hazure.wav");
 // 爆発
-const explosionSound = new Audio(  "https://raw.githubusercontent.com/1-1chem/kouzousikigame/main/explosion-sound.mp3");
+const explosionSound = new Audio(  "https://raw.githubusercontent.com/1-1chem/kouzousikigame/main/explosion-sound.mp3");
 // チュートリアル間違い
-const tutorialMissSound = new Audio(  "https://raw.githubusercontent.com/1-1chem/kouzousikigame/main/tigauyo.mp3");
-const gameOverSound = new Audio(  "https://raw.githubusercontent.com/1-1chem/kouzousikigame/main/shuuryou.mp3");
+const tutorialMissSound = new Audio(  "https://raw.githubusercontent.com/1-1chem/kouzousikigame/main/tigauyo.mp3");
+const gameOverSound = new Audio(  "https://raw.githubusercontent.com/1-1chem/kouzousikigame/main/shuuryou.mp3");
 const clearAudio = new Audio( "https://raw.githubusercontent.com/1-1chem/kouzousikigame/main/gameclear.mp3");
 // 読み込み
 clickSound.preload = "auto";
@@ -244,46 +243,46 @@ tutorialMissSound.volume = 0.8;
 // クイズデータの設定
 // ======================
 const questions = [
-  { text: "【練習問題1】メチル基をかけ", answers: ["CH3"], isTutorial: true, sequence: ["C", "H", "3"] },
-  { text: "トルエンの構造式をかけ", answers: ["CH3"] },
-  { text: "エチルベンゼンの構造式をかけ", answers: ["C2H5","CH2CH3"] },
-  { text: "クロロベンゼンの構造式をかけ", answers: ["Cl"] },
-  { text: "ブロモベンセンの構造式をかけ", answers: ["Br"] },
-  { text: "【練習問題2】ビニル基をかけ", answers: ["CH＝CH2"], isTutorial: true, sequence: ["C", "H", "＝","C", "H", "2"] },
-  { text: "スチレンの構造式をかけ", answers: ["CH＝CH2"] },
-  { text: "【練習問題3】ニトロ基をかけ", answers: ["NO2"], isTutorial: true, sequence: ["N", "O", "2"] },
-  { text: "ニトロベンゼンの構造式をかけ", answers: ["NO2"] },
-  { text: "ベンゼンスルホン酸の構造式をかけ", answers: ["SO3H", "SO3-H+"] },
-  { text: "フェノールの構造式をかけ", answers: ["OH"] },
-  { text: "ナトリウムフェノキシドの構造式をかけ", answers: ["O-Na+", "ONa"] },
-  { text: "ベンゼンスルホン酸ナトリウムの構造式をかけ", answers: ["SO3Na", "SO3-Na+"] },
-  { text: "【練習問題4】カルボキシ基をかけ", answers: ["C＝OOH"], isTutorial: true, sequence: ["C", "＝", "O", "ー", "O", "H"] },
-  { text: "安息香酸の構造式をかけ", answers: ["C＝OOH"] },
-  { text: "ベンズアルデヒドの構造式をかけ", answers: ["CHO","C＝OH"] },
-  { text: "ベンジルアルコールの構造式をかけ", answers: ["CH2OH"] },
-  { text: "m-キシレンの構造式をかけ", answers: ["CH3m-CH3"] },
-  { text: "o-キシレンの構造式をかけ", answers: ["CH3o-CH3"] },
-  { text: "p-キシレンの構造式をかけ", answers: ["CH3p-CH3"] },
-  { text: "フタル酸の構造式をかけ", answers: ["C＝OOHo-C＝OOH"] },
-  { text: "イソフタル酸の構造式をかけ", answers: ["C＝OOHm-C＝OOH"] },
-  { text: "テレフタル酸の構造式をかけ", answers: ["C＝OOHp-C＝OOH"] },
-  { text: "サリチル酸の構造式をかけ", answers: ["OHo-C＝OOH","C＝OOHo-OH"] },
-  { text: "サリチル酸ナトリウムの構造式をかけ", answers: ["OHo-C＝OONa","C＝OONao-OH"] },
-  { text: "サリチル酸メチルの構造式をかけ", answers: ["OHo-C＝OOCH3","C＝OOCH3o-OH"] },
-  { text: "アセチルサリチル酸の構造式をかけ", answers: ["OC＝OCH3o-C＝OOH","C＝OOHo-OC＝OCH3"] },
-  { text: "アニリンの構造式をかけ", answers: ["NH2"] },
-  { text: "アニリン塩酸塩の構造式をかけ", answers: ["NH3+Cl-"] },
-  { text: "塩化ベンゼンジアゾニウムの構造式をかけ", answers: ["N2+Cl-","N+≡NCl-"] },
-  { text: "アセトアニリドの構造式をかけ", answers: ["NHC＝OCH3"] },
-  { text: "p-ヒドロキシアゾベンゼンの構造式をかけ", answers: ["N＝NPhp-OH"] },
-  { text: "【練習問題5】イソプロピル基をかけ", answers: ["C(CH3)2H"], isTutorial: true, sequence: ["C", "(", "C", "H", "3", ")", "2", "H"] },
-  { text: "クメンの構造式をかけ", answers: ["C(CH3)2H"] },
-  { text: "クメンヒドロペルオキシドの構造式をかけ", answers: ["C(CH3)2OOH"] },
-  { text: "アセトフェノンの構造式をかけ", answers: ["C＝OCH3"] },
-  { text: "アニソールの構造式をかけ", answers: ["OCH3"] },
-  { text: "2,4,6-トリブロモフェノール", answers: ["OH隣のCへBr隣のCへ隣のCへBr隣のCへ隣のCへBr"] },
-  { text: "2,4,6-トリニトロフェノール", answers: ["OH隣のCへNO2隣のCへ隣のCへNO2隣のCへ隣のCへNO2"] },
-  { text: "無水フタル酸の構造式をかけ", answers: ["C＝O\\Oo-C＝O/", "C＝O\\o-C＝O/O"] },
+  { text: "【練習問題1】メチル基をかけ", answers: ["CH3"], isTutorial: true, sequence: ["C", "H", "3"] },
+  { text: "トルエンの構造式をかけ", answers: ["CH3"] },
+  { text: "エチルベンゼンの構造式をかけ", answers: ["C2H5","CH2CH3"] },
+  { text: "クロロベンゼンの構造式をかけ", answers: ["Cl"] },
+  { text: "ブロモベンセンの構造式をかけ", answers: ["Br"] },
+  { text: "【練習問題2】ビニル基をかけ", answers: ["CH＝CH2"], isTutorial: true, sequence: ["C", "H", "＝","C", "H", "2"] },
+  { text: "スチレンの構造式をかけ", answers: ["CH＝CH2"] },
+  { text: "【練習問題3】ニトロ基をかけ", answers: ["NO2"], isTutorial: true, sequence: ["N", "O", "2"] },
+  { text: "ニトロベンゼンの構造式をかけ", answers: ["NO2"] },
+  { text: "ベンゼンスルホン酸の構造式をかけ", answers: ["SO3-H+"] },
+  { text: "フェノールの構造式をかけ", answers: ["OH"] },
+  { text: "ナトリウムフェノキシドの構造式をかけ", answers: ["O-Na+"] },
+  { text: "ベンゼンスルホン酸ナトリウムの構造式をかけ", answers: [ "SO3-Na+"] },
+  { text: "【練習問題4】カルボキシ基をかけ", answers: ["C＝OOH"], isTutorial: true, sequence: ["C", "＝", "O", "ー", "O", "H"] },
+  { text: "安息香酸の構造式をかけ", answers: ["C＝OOH"] },
+  { text: "ベンズアルデヒドの構造式をかけ", answers: ["CHO","C＝OH"] },
+  { text: "ベンジルアルコールの構造式をかけ", answers: ["CH2OH"] },
+  { text: "m-キシレンの構造式をかけ", answers: ["CH3m-CH3"] },
+  { text: "o-キシレンの構造式をかけ", answers: ["CH3o-CH3"] },
+  { text: "p-キシレンの構造式をかけ", answers: ["CH3p-CH3"] },
+  { text: "フタル酸の構造式をかけ", answers: ["C＝OOHo-C＝OOH"] },
+  { text: "イソフタル酸の構造式をかけ", answers: ["C＝OOHm-C＝OOH"] },
+  { text: "テレフタル酸の構造式をかけ", answers: ["C＝OOHp-C＝OOH"] },
+  { text: "サリチル酸の構造式をかけ", answers: ["OHo-C＝OOH","C＝OOHo-OH"] },
+  { text: "サリチル酸ナトリウムの構造式をかけ", answers: ["OHo-C＝OO-Na+","C＝OO-Na+o-OH"] },
+  { text: "サリチル酸メチルの構造式をかけ", answers: ["OHo-C＝OOCH3","C＝OOCH3o-OH"] },
+  { text: "アセチルサリチル酸の構造式をかけ", answers: ["OC＝OCH3o-C＝OOH","C＝OOHo-OC＝OCH3"] },
+  { text: "アニリンの構造式をかけ", answers: ["NH2"] },
+  { text: "アニリン塩酸塩の構造式をかけ", answers: ["NH3+Cl-"] },
+  { text: "塩化ベンゼンジアゾニウムの構造式をかけ", answers: ["N2+Cl-","N+≡NCl-"] },
+  { text: "アセトアニリドの構造式をかけ", answers: ["NHC＝OCH3"] },
+  { text: "p-ヒドロキシアゾベンゼンの構造式をかけ", answers: ["N＝NPhp-OH"] },
+  { text: "【練習問題5】イソプロピル基をかけ", answers: ["C(CH3)2H"], isTutorial: true, sequence: ["C", "(", "C", "H", "3", ")", "2", "H"] },
+  { text: "クメンの構造式をかけ", answers: ["C(CH3)2H"] },
+  { text: "クメンヒドロペルオキシドの構造式をかけ", answers: ["C(CH3)2OOH"] },
+  { text: "アセトフェノンの構造式をかけ", answers: ["C＝OCH3"] },
+  { text: "アニソールの構造式をかけ", answers: ["OCH3"] },
+  { text: "2,4,6-トリブロモフェノール", answers: ["OH隣のCへBr隣のCへ隣のCへBr隣のCへ隣のCへBr"] },
+  { text: "2,4,6-トリニトロフェノール", answers: ["OH隣のCへNO2隣のCへ隣のCへNO2隣のCへ隣のCへNO2"] },
+  { text: "無水フタル酸の構造式をかけ", answers: ["C＝O\\Oo-C＝O/", "C＝O\\o-C＝O/O"] },
 ];
 
 let currentQuestionIndex = 0;
@@ -336,179 +335,179 @@ const restartBtn = document.getElementById( "restartBtn" );
 
 
 function updateHPDisplay() {
-  scoreDisplay.textContent = hp;
-  const bar = document.getElementById("hpBarInner");
-  bar.style.width = hp + "%";
-  // 色変化
-  if (hp <= 20) {
-    bar.style.background =
-      "linear-gradient(to right,#ef5350,#c62828)";
-  }
-  else if (hp <= 50) {
-    bar.style.background =
-      "linear-gradient(to right,#ffca28,#f9a825)";
-  }
-  else {
-    bar.style.background =
-      "linear-gradient(to right,#66bb6a,#43a047)";
-  }
+  scoreDisplay.textContent = hp;
+  const bar = document.getElementById("hpBarInner");
+  bar.style.width = hp + "%";
+  // 色変化
+  if (hp <= 20) {
+    bar.style.background =
+      "linear-gradient(to right,#ef5350,#c62828)";
+  }
+  else if (hp <= 50) {
+    bar.style.background =
+      "linear-gradient(to right,#ffca28,#f9a825)";
+  }
+  else {
+    bar.style.background =
+      "linear-gradient(to right,#66bb6a,#43a047)";
+  }
 }
 
 function updateQuestionGauge() {
 
-  const gauge =
-    document.getElementById(
-      "questionGaugeInner"
-    );
+  const gauge =
+    document.getElementById(
+      "questionGaugeInner"
+    );
 
-  const total =
-    questions.length;
+  const total =
+    questions.length;
 
-  const remain =
-    total - currentQuestionIndex;
+  const remain =
+    total - currentQuestionIndex;
 
-  const percent =
-    (remain / total) * 100;
+  const percent =
+    (remain / total) * 100;
 
-  gauge.style.height =
-    percent + "%";
+  gauge.style.height =
+    percent + "%";
 }
 
 function createGaugeMarks() {
-  const marks = document.getElementById( "gaugeMarks" );
-  const total = questions.length;
-  for (let i = 1; i < total; i++) {
-    // 5問ごとに線
-    if (i % 5 !== 0) continue;
-    const line = document.createElement("div");
-    line.className = "gaugeMark";
-    line.style.bottom =  (i / total) * 100 + "%";
-    marks.appendChild(line);
-  }
+  const marks = document.getElementById( "gaugeMarks" );
+  const total = questions.length;
+  for (let i = 1; i < total; i++) {
+    // 5問ごとに線
+    if (i % 5 !== 0) continue;
+    const line = document.createElement("div");
+    line.className = "gaugeMark";
+    line.style.bottom =  (i / total) * 100 + "%";
+    marks.appendChild(line);
+  }
 }
 
 
 function explodeQuestionText() {
-  const text = questions[currentQuestionIndex].text;
-  explodedQuestionText = text;
-  explosionParticles = [];
-  // 問題文BOXの位置
-  const box = document.getElementById("questionBox");
-  const rect = box.getBoundingClientRect();
-  // 1文字ずつ分解
-  for (let i = 0; i < text.length; i++) {
-    const ch = text[i];
-    explosionParticles.push({
-      char: ch,
-      x: 120 + i * 18,
-      y: 40,
-      vx: (Math.random() - 0.5) * 4,
-      vy: -Math.random() * 4 - 2,
-      rot: Math.random() * 360,
-      vr: (Math.random() - 0.5) * 20,
-      life: 1
-    });
-  }
+  const text = questions[currentQuestionIndex].text;
+  explodedQuestionText = text;
+  explosionParticles = [];
+  // 問題文BOXの位置
+  const box = document.getElementById("questionBox");
+  const rect = box.getBoundingClientRect();
+  // 1文字ずつ分解
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    explosionParticles.push({
+      char: ch,
+      x: 120 + i * 18,
+      y: 40,
+      vx: (Math.random() - 0.5) * 4,
+      vy: -Math.random() * 4 - 2,
+      rot: Math.random() * 360,
+      vr: (Math.random() - 0.5) * 20,
+      life: 1
+    });
+  }
 }
 
 // ======================
 // 描画エンジン・共通関数
 // ======================
 function render() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  drawCommands.forEach(cmd => cmd());
-  // ======================
-  // 問題文爆発
-  for (  let i = explosionParticles.length - 1;
-    i >= 0;
-    i--  ) {
-    const p =  explosionParticles[i];
-    p.x += p.vx;
-    p.y += p.vy;
-    p.vy += 0.1;   //重力
-    p.rot += p.vr;
-    p.life -= 0.001;  //破片が残存する時間少ないほど長い
-    ctx.save();
-    ctx.globalAlpha = Math.max(p.life, 0);
-    ctx.translate(p.x, p.y);
-    ctx.rotate(  p.rot * Math.PI / 180 );
-    ctx.font = "bold 20px Arial";
-    ctx.fillStyle = "black";
-    ctx.fillText( p.char, 0, 0 );
-    ctx.restore();
-    if (p.life <= 0) {
-      explosionParticles.splice(i, 1);
-    }
-  }
- 
-  // ======================
-  // 飛行アニメ
-  // ======================
-  for (let i = flyingTexts.length - 1; i >= 0; i--) {
-    const f = flyingTexts[i];
-    f.progress += 0.05;//アニメーション再生速度
-    if (f.progress >= 1) {
-      // 最終描画
-      f.onFinish();
-      isAnimating = false;
-      flyingTexts.splice(i, 1);
-      continue;
-    }
-    const t = f.progress;
-    // ease
-    const eased = 1 - Math.pow(1 - t, 3);
-    const x = f.startX +  (f.endX - f.startX) * eased;
-    let y =  f.startY +  (f.endY - f.startY) * eased;
-    // 放物線ジャンプ
-    y -= Math.sin(t * Math.PI) * 40;
-    ctx.font = "bold 30px Arial";
-    ctx.fillStyle = "blue";
-    ctx.fillText(f.text, x, y);
-  }
-  if (!submitBtn.disabled) {
-    const alpha = (Math.sin(Date.now() / 200) + 1) / 2;
-    ctx.beginPath();
-    ctx.arc( textX + cursorOffsetX,textY + cursorOffsetY, 8, 0, Math.PI * 2 );
-    ctx.fillStyle = `rgba(255, 0, 0, ${alpha * 0.3})`;
-    ctx.fill();
-  }
-  requestAnimationFrame(render);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawCommands.forEach(cmd => cmd());
+  // ======================
+  // 問題文爆発
+  for (  let i = explosionParticles.length - 1;
+    i >= 0;
+    i--  ) {
+    const p =  explosionParticles[i];
+    p.x += p.vx;
+    p.y += p.vy;
+    p.vy += 0.1;   //重力
+    p.rot += p.vr;
+    p.life -= 0.001;  //破片が残存する時間少ないほど長い
+    ctx.save();
+    ctx.globalAlpha = Math.max(p.life, 0);
+    ctx.translate(p.x, p.y);
+    ctx.rotate(  p.rot * Math.PI / 180 );
+    ctx.font = "bold 20px Arial";
+    ctx.fillStyle = "black";
+    ctx.fillText( p.char, 0, 0 );
+    ctx.restore();
+    if (p.life <= 0) {
+      explosionParticles.splice(i, 1);
+    }
+  }
+ 
+  // ======================
+  // 飛行アニメ
+  // ======================
+  for (let i = flyingTexts.length - 1; i >= 0; i--) {
+    const f = flyingTexts[i];
+    f.progress += 0.05;//アニメーション再生速度
+    if (f.progress >= 1) {
+      // 最終描画
+      f.onFinish();
+      isAnimating = false;
+      flyingTexts.splice(i, 1);
+      continue;
+    }
+    const t = f.progress;
+    // ease
+    const eased = 1 - Math.pow(1 - t, 3);
+    const x = f.startX +  (f.endX - f.startX) * eased;
+    let y =  f.startY +  (f.endY - f.startY) * eased;
+    // 放物線ジャンプ
+    y -= Math.sin(t * Math.PI) * 40;
+    ctx.font = "bold 30px Arial";
+    ctx.fillStyle = "blue";
+    ctx.fillText(f.text, x, y);
+  }
+  if (!submitBtn.disabled) {
+    const alpha = (Math.sin(Date.now() / 200) + 1) / 2;
+    ctx.beginPath();
+    ctx.arc( textX + cursorOffsetX,textY + cursorOffsetY, 8, 0, Math.PI * 2 );
+    ctx.fillStyle = `rgba(255, 0, 0, ${alpha * 0.3})`;
+    ctx.fill();
+  }
+  requestAnimationFrame(render);
 }
 
 function addCommand(fn) { drawCommands.push(fn); }
 
 function drawLine(x1, y1, x2, y2, width = 3) {
-  addCommand(() => {
-    ctx.lineWidth = width;
-    ctx.strokeStyle = "black";
-    ctx.beginPath();
-    ctx.moveTo(x1, y1);
-    ctx.lineTo(x2, y2);
-    ctx.stroke();
-  });
+  addCommand(() => {
+    ctx.lineWidth = width;
+    ctx.strokeStyle = "black";
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+  });
 }
 
 function drawText(text, x, y, size = 30) {
-  addCommand(() => {
-    ctx.font = `bold ${size}px Arial`;
-    ctx.fillStyle = "black";
-    ctx.fillText(text, x, y);
-  });
+  addCommand(() => {
+    ctx.font = `bold ${size}px Arial`;
+    ctx.fillStyle = "black";
+    ctx.fillText(text, x, y);
+  });
 }
 
 function animateButtonToStructure(text, buttonElement, onFinish) {
-  if (isAnimating) return;
-  isAnimating = true;
-    const rect = buttonElement.getBoundingClientRect();
-    const canvasRect = canvas.getBoundingClientRect();
-    const startX = rect.left - canvasRect.left + rect.width / 2;
-    const startY = rect.top - canvasRect.top + rect.height / 2;
-    flyingTexts.push({
-      text, startX, startY,
-      endX: textX, endY: textY,
-      progress: 0,
-      onFinish
-    });
+  if (isAnimating) return;
+  isAnimating = true;
+    const rect = buttonElement.getBoundingClientRect();
+    const canvasRect = canvas.getBoundingClientRect();
+    const startX = rect.left - canvasRect.left + rect.width / 2;
+    const startY = rect.top - canvasRect.top + rect.height / 2;
+    flyingTexts.push({
+      text, startX, startY,
+      endX: textX, endY: textY,
+      progress: 0,
+      onFinish
+    });
 }
 
 
@@ -516,51 +515,51 @@ function animateButtonToStructure(text, buttonElement, onFinish) {
 // テキスト・結合線の描画
 // ======================
 function drawNormalText(text) {
-  drawText(text, textX - 5, textY - 5, 30);
-  lastCharX = textX;
-  lastCharY = textY;
-  ctx.font = "bold 30px Arial";
-  const w = ctx.measureText(text).width;
-  if (verticalDoubleMode) {
-    textX = lastBaseX + w + 2;
-    textY = lastBaseY;
-    verticalDoubleMode = false;
-  } else {
-    textX += w + 2;
-  }
+  drawText(text, textX - 5, textY - 5, 30);
+  lastCharX = textX;
+  lastCharY = textY;
+  ctx.font = "bold 30px Arial";
+  const w = ctx.measureText(text).width;
+  if (verticalDoubleMode) {
+    textX = lastBaseX + w + 2;
+    textY = lastBaseY;
+    verticalDoubleMode = false;
+  } else {
+    textX += w + 2;
+  }
 }
 
 function drawVerticalBond(doubleBond = false) {
-  const lx = lastCharX, ly = lastCharY;
-  if (doubleBond) {
-    drawLine(lx + 2, ly - 46, lx + 2, ly - 30, 2);
-    drawLine(lx + 8, ly - 46, lx + 8, ly - 30, 2);
-    textX = lx - 2;
-  } else {
-    drawLine(lx + 5, ly - 46, lx + 5, ly - 30, 3);
-    textX = lx;
-  }
-  textY = ly - 45;
-  lastBaseX = lx; lastBaseY = ly;
-  verticalDoubleMode = true;
+  const lx = lastCharX, ly = lastCharY;
+  if (doubleBond) {
+    drawLine(lx + 2, ly - 46, lx + 2, ly - 30, 2);
+    drawLine(lx + 8, ly - 46, lx + 8, ly - 30, 2);
+    textX = lx - 2;
+  } else {
+    drawLine(lx + 5, ly - 46, lx + 5, ly - 30, 3);
+    textX = lx;
+  }
+  textY = ly - 45;
+  lastBaseX = lx; lastBaseY = ly;
+  verticalDoubleMode = true;
 }
 
 // 下＝の描画
 function drawBottomDoubleBond(savedTextY) {
-  const centerX = textX + 7;
-  drawLine(centerX - 29, savedTextY - 2, centerX - 29, savedTextY + 16, 2);
-  drawLine(centerX - 23, savedTextY - 2, centerX - 23, savedTextY + 16, 2);
-  textX = originalTextXBeforeBottom - 5; // 赤丸・文字の基準X座標
-  textY = savedTextY + 42;               // 赤丸・文字の基準Y座標
+  const centerX = textX + 7;
+  drawLine(centerX - 29, savedTextY - 2, centerX - 29, savedTextY + 16, 2);
+  drawLine(centerX - 23, savedTextY - 2, centerX - 23, savedTextY + 16, 2);
+  textX = originalTextXBeforeBottom - 5; // 赤丸・文字の基準X座標
+  textY = savedTextY + 42;               // 赤丸・文字の基準Y座標
 }
 
 function drawDiagonalBond(targetText) {
-  let conf = targetText === "\\"
-    ? { startX: -6, startY: -10, dx: 13, dy: 12, nextX: 13, nextY: 25 }
-    : { startX: -6, startY: -20, dx: 13, dy: -12, nextX: 13, nextY: -25 };
-  drawLine(textX + conf.startX, textY + conf.startY, textX + conf.startX + conf.dx, textY + conf.startY + conf.dy, 3);
-  textX += conf.nextX;
-  textY += conf.nextY;
+  let conf = targetText === "\\"
+    ? { startX: -6, startY: -10, dx: 13, dy: 12, nextX: 13, nextY: 25 }
+    : { startX: -6, startY: -20, dx: 13, dy: -12, nextX: 13, nextY: -25 };
+  drawLine(textX + conf.startX, textY + conf.startY, textX + conf.startX + conf.dx, textY + conf.startY + conf.dy, 3);
+  textX += conf.nextX;
+  textY += conf.nextY;
 }
 
 
@@ -568,416 +567,1019 @@ function drawDiagonalBond(targetText) {
 // ベンゼン環の描画ロジック
 // ======================
 function createHexagonPoints(cx, cy, r, type) {
-  const points = [];
-  const offsetAngle = type === "vertical" ? -150 : 0;
-  for (let i = 0; i < 6; i++) {
-    const angle = (offsetAngle + i * 60) * Math.PI / 180;
-    points.push({ x: cx + r * Math.cos(angle), y: cy + r * Math.sin(angle) });
-  }
-  return points;
+  const points = [];
+  const offsetAngle = type === "vertical" ? -150 : 0;
+  for (let i = 0; i < 6; i++) {
+    const angle = (offsetAngle + i * 60) * Math.PI / 180;
+    points.push({ x: cx + r * Math.cos(angle), y: cy + r * Math.sin(angle) });
+  }
+  return points;
 }
 
 function drawBenzeneRingBonds(points, cx, cy, r) {
-  addCommand(() => {
-    ctx.beginPath();
-    ctx.moveTo(points[0].x, points[0].y);
-    for (let i = 1; i < 6; i++) ctx.lineTo(points[i].x, points[i].y);
-    ctx.closePath();
-    ctx.lineWidth = 3;
-    ctx.strokeStyle = "black";
-    ctx.stroke();
-    
-    const dbl = (p1, p2) => {
-      const dx = p2.x - p1.x, dy = p2.y - p1.y, len = Math.sqrt(dx*dx+dy*dy);
-      let nx = -dy/len, ny = dx/len;
-      const midx = (p1.x+p2.x)/2, midy = (p1.y+p2.y)/2;
-      if (nx*(cx-midx) + ny*(cy-midy) < 0) { nx*=-1; ny*=-1; }
-      const off = r * 0.23;
-      ctx.beginPath();
-      ctx.moveTo(p1.x + nx*off, p1.y + ny*off);
-      ctx.lineTo(p2.x + nx*off, p2.y + ny*off);
-      ctx.stroke();
-    };
-    dbl(points[0], points[1]); dbl(points[2], points[3]); dbl(points[4], points[5]);
-  });
+  addCommand(() => {
+    ctx.beginPath();
+    ctx.moveTo(points[0].x, points[0].y);
+    for (let i = 1; i < 6; i++) ctx.lineTo(points[i].x, points[i].y);
+    ctx.closePath();
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = "black";
+    ctx.stroke();
+    
+    const dbl = (p1, p2) => {
+      const dx = p2.x - p1.x, dy = p2.y - p1.y, len = Math.sqrt(dx*dx+dy*dy);
+      let nx = -dy/len, ny = dx/len;
+      const midx = (p1.x+p2.x)/2, midy = (p1.y+p2.y)/2;
+      if (nx*(cx-midx) + ny*(cy-midy) < 0) { nx*=-1; ny*=-1; }
+      const off = r * 0.23;
+      ctx.beginPath();
+      ctx.moveTo(p1.x + nx*off, p1.y + ny*off);
+      ctx.lineTo(p2.x + nx*off, p2.y + ny*off);
+      ctx.stroke();
+    };
+    dbl(points[0], points[1]); dbl(points[2], points[3]); dbl(points[4], points[5]);
+  });
 }
 
 function drawStartBenzene(type, branchIndex) {
-  const r = type === "vertical" ? 25 : 20;
-  const cx = type === "vertical" ? 150 : 100;
-  const cy = currentBenzeneCy;
-  const points = createHexagonPoints(cx, cy, r, type);
-  if (!questions[currentQuestionIndex].isTutorial) {
-    drawBenzeneRingBonds(points, cx, cy, r);
-  }
-  const p = points[branchIndex];
-  const bondLength = r * 0.7;
-  const ux = (p.x - cx) / r, uy = (p.y - cy) / r;
-  const tipX = p.x + ux * bondLength, tipY = p.y + uy * bondLength;
-  drawLine(p.x, p.y, tipX, tipY, 3);
-  
-  if (type === "vertical") {
-    if (branchIndex === 1) { textX = tipX - 6; textY = tipY - 2; } 
-    else if (branchIndex === 2) { textX = tipX + 4; textY = tipY + 8; } 
-    else { textX = tipX; textY = tipY; }
-  } else {
-    if (branchIndex === 0) { textX = tipX + 10; textY = tipY + 18; } 
-    else { textX = tipX; textY = tipY; }
-  }
-  benzenePoints = points; currentBenzeneCx = cx; currentBenzeneCy = cy; 
-  benzeneType = type; startBranchIndex = branchIndex; 
+  const r = type === "vertical" ? 25 : 20;
+  const cx = type === "vertical" ? 150 : 100;
+  const cy = currentBenzeneCy;
+  const points = createHexagonPoints(cx, cy, r, type);
+  if (!questions[currentQuestionIndex].isTutorial) {
+    drawBenzeneRingBonds(points, cx, cy, r);
+  }
+  const p = points[branchIndex];
+  const bondLength = r * 0.7;
+  const ux = (p.x - cx) / r, uy = (p.y - cy) / r;
+  const tipX = p.x + ux * bondLength, tipY = p.y + uy * bondLength;
+  drawLine(p.x, p.y, tipX, tipY, 3);
+  
+  if (type === "vertical") {
+    if (branchIndex === 1) { textX = tipX - 6; textY = tipY - 2; } 
+    else if (branchIndex === 2) { textX = tipX + 4; textY = tipY + 8; } 
+    else { textX = tipX; textY = tipY; }
+  } else {
+    if (branchIndex === 0) { textX = tipX + 10; textY = tipY + 18; } 
+    else { textX = tipX; textY = tipY; }
+  }
+  benzenePoints = points; currentBenzeneCx = cx; currentBenzeneCy = cy; 
+  benzeneType = type; startBranchIndex = branchIndex; 
 }
 
 function drawHorizontalPh() {
-  const r = 20, cy = textY - 18, cx = textX + 20 + r;
-  drawLine(textX, cy, textX + 20, cy, 3);
-  const points = createHexagonPoints(cx, cy, r, "horizontal");
-  drawBenzeneRingBonds(points, cx, cy, r);
-  textX = points[0].x + 5; textY = cy + 18;
-  benzenePoints = points; currentBenzeneCx = cx; currentBenzeneCy = cy; 
-  benzeneType = "horizontal"; startBranchIndex = 3;
+  const r = 20, cy = textY - 18, cx = textX + 20 + r;
+  drawLine(textX, cy, textX + 20, cy, 3);
+  const points = createHexagonPoints(cx, cy, r, "horizontal");
+  drawBenzeneRingBonds(points, cx, cy, r);
+  textX = points[0].x + 5; textY = cy + 18;
+  benzenePoints = points; currentBenzeneCx = cx; currentBenzeneCy = cy; 
+  benzeneType = "horizontal"; startBranchIndex = 3;
 }
 
 // ======================
 // 分岐（オルト・メタ・パラ）位置微調整
 // ======================
 function getBranchOffset(benzeneType, startBranchIndex, type, nx, ny) {
-  let offsetX = 0, offsetY = 0;
-  let cOffsetX = 5, cOffsetY = -18; // 赤丸のデフォルト位置補正
-  
-  if (benzeneType === "vertical") {
-    // 1. ベンゼン環が縦で 【上の角】 に棒がある場合 (startBranchIndex === 1)
-    if (startBranchIndex === 1) {
-      if (type === "o") {      // 右上
-        offsetX = 5; offsetY = 10; cOffsetX = 5; cOffsetY = -18;
-      } else if (type === "m") { // 右下
-        offsetX = 5; offsetY = 20; cOffsetX = 5; cOffsetY = -18;
-      } else if (type === "p") { // 真下
-        offsetX = -6; offsetY = 30; cOffsetX = 5; cOffsetY = -18;
-      }
-    } 
-    // 2. ベンゼン環が縦で 【右上の角】 に棒がある場合 (startBranchIndex === 2)
-    else if (startBranchIndex === 2) {
-      if (type === "o") {      // 右下
-        offsetX = 4; offsetY = 21; cOffsetX = 5; cOffsetY = -18;
-      } else if (type === "m") { // 真下
-        offsetX = -7; offsetY = 30; cOffsetX = 9; cOffsetY = -18;
-      } else if (type === "p") { // 左下 (文字とめり込まないよう左寄せ)
-        offsetX = -28; offsetY = 14; cOffsetX = 10; cOffsetY = -18;
-      }
-    }
-  } else { 
-    // 3. ベンゼン環が横で 【左】 に棒がある場合 (startBranchIndex === 3)
-    if (startBranchIndex === 3) {
-      if (type === "o") {      // 左上 (文字が左へはみ出すのを防止)
-        offsetX = -15; offsetY = 3; cOffsetX = 10; cOffsetY = -18;
-      } else if (type === "m") { // 右上
-        offsetX = 2; offsetY = 3; cOffsetX = 5; cOffsetY = -18;
-      } else if (type === "p") { // 真右
-        offsetX = 8;  offsetY = 16;  cOffsetX = 5;  cOffsetY = -18;
-      }
-    } else if (startBranchIndex === 0) {
-      if (type === "p") { offsetX = -25; offsetY = 14; cOffsetX = 10; cOffsetY = -18; }
-      else {
-        offsetX = nx > 0.5 ? (type === "o" ? 2 : 6) : (type === "o" ? -25 : -15);
-        offsetY = nx > 0.5 ? (type === "o" ? 24 : 6) : (type === "o" ? 6 : 24);
-      }
-    }
-  }
-  return { offsetX, offsetY, cursorOffsetX: cOffsetX, cursorOffsetY: cOffsetY };
+  let offsetX = 0, offsetY = 0;
+  let cOffsetX = 5, cOffsetY = -18; // 赤丸のデフォルト位置補正
+  
+  if (benzeneType === "vertical") {
+    // 1. ベンゼン環が縦で 【上の角】 に棒がある場合 (startBranchIndex === 1)
+    if (startBranchIndex === 1) {
+      if (type === "o") {      // 右上
+        offsetX = 5; offsetY = 10; cOffsetX = 5; cOffsetY = -18;
+      } else if (type === "m") { // 右下
+        offsetX = 5; offsetY = 20; cOffsetX = 5; cOffsetY = -18;
+      } else if (type === "p") { // 真下
+        offsetX = -6; offsetY = 30; cOffsetX = 5; cOffsetY = -18;
+      }
+    } 
+    // 2. ベンゼン環が縦で 【右上の角】 に棒がある場合 (startBranchIndex === 2)
+    else if (startBranchIndex === 2) {
+      if (type === "o") {      // 右下
+        offsetX = 4; offsetY = 21; cOffsetX = 5; cOffsetY = -18;
+      } else if (type === "m") { // 真下
+        offsetX = -7; offsetY = 30; cOffsetX = 9; cOffsetY = -18;
+      } else if (type === "p") { // 左下 (文字とめり込まないよう左寄せ)
+        offsetX = -28; offsetY = 14; cOffsetX = 10; cOffsetY = -18;
+      }
+    }
+  } else { 
+    // 3. ベンゼン環が横で 【左】 に棒がある場合 (startBranchIndex === 3)
+    if (startBranchIndex === 3) {
+      if (type === "o") {      // 左上 (文字が左へはみ出すのを防止)
+        offsetX = -15; offsetY = 3; cOffsetX = 10; cOffsetY = -18;
+      } else if (type === "m") { // 右上
+        offsetX = 2; offsetY = 3; cOffsetX = 5; cOffsetY = -18;
+      } else if (type === "p") { // 真右
+        offsetX = 8;  offsetY = 16;  cOffsetX = 5;  cOffsetY = -18;
+      }
+    } else if (startBranchIndex === 0) {
+      if (type === "p") { offsetX = -25; offsetY = 14; cOffsetX = 10; cOffsetY = -18; }
+      else {
+        offsetX = nx > 0.5 ? (type === "o" ? 2 : 6) : (type === "o" ? -25 : -15);
+        offsetY = nx > 0.5 ? (type === "o" ? 24 : 6) : (type === "o" ? 6 : 24);
+      }
+    }
+  }
+  return { offsetX, offsetY, cursorOffsetX: cOffsetX, cursorOffsetY: cOffsetY };
 }
 
 function drawBranchRelative(offset, type) {
-  const idx = (startBranchIndex + offset) % 6; 
-  const p = benzenePoints[idx];
-  
-  const dx = p.x - currentBenzeneCx, dy = p.y - currentBenzeneCy;
-  const len = Math.sqrt(dx*dx + dy*dy);
-  const nx = dx / len, ny = dy / len;
-  
-  const branchLen = 18;
-  const bx = p.x + nx * branchLen, by = p.y + ny * branchLen;
-  drawLine(p.x, p.y, bx, by, 3);
-  
-  const res = getBranchOffset(benzeneType, startBranchIndex, type, nx, ny);
-  textX = bx + res.offsetX;
-  textY = by + res.offsetY;
-  cursorOffsetX = res.cursorOffsetX;
-  cursorOffsetY = res.cursorOffsetY;
+  const idx = (startBranchIndex + offset) % 6; 
+  const p = benzenePoints[idx];
+  
+  const dx = p.x - currentBenzeneCx, dy = p.y - currentBenzeneCy;
+  const len = Math.sqrt(dx*dx + dy*dy);
+  const nx = dx / len, ny = dy / len;
+  
+  const branchLen = 18;
+  const bx = p.x + nx * branchLen, by = p.y + ny * branchLen;
+  drawLine(p.x, p.y, bx, by, 3);
+  
+  const res = getBranchOffset(benzeneType, startBranchIndex, type, nx, ny);
+  textX = bx + res.offsetX;
+  textY = by + res.offsetY;
+  cursorOffsetX = res.cursorOffsetX;
+  cursorOffsetY = res.cursorOffsetY;
 }
 
 function drawOrthoBranch() { drawBranchRelative(1, "o"); } 
-function drawMetaBranch() { drawBranchRelative(2, "m"); }  
-function drawParaBranch() { drawBranchRelative(3, "p"); }  
+function drawMetaBranch() { drawBranchRelative(2, "m"); }  
+function drawParaBranch() { drawBranchRelative(3, "p"); }  
 
 
 // ======================
 // ベンゼン環 巡回モード（隣のCへ 2位〜6位）
 // ======================
 function moveCursorToNextRingCarbon() {
-  if (!isRingTourMode) {
-    isRingTourMode = true;
-    currentRingIndex = startBranchIndex; 
-  }
-  
-  currentRingIndex = (currentRingIndex + 1) % 6;
-  
-  const p = benzenePoints[currentRingIndex];
-  const dx = p.x - currentBenzeneCx, dy = p.y - currentBenzeneCy;
-  const len = Math.sqrt(dx*dx + dy*dy);
-  const nx = dx / len, ny = dy / len;
-  
-  const branchLen = 18;
-  const bx = p.x + nx * branchLen, by = p.y + ny * branchLen;
-  
-  const q = questions[currentQuestionIndex];
-  window.isLeftNitroMode = q.text.includes("2,4,6") && (currentRingIndex === 0 || currentRingIndex === 5);
-  
+  if (!isRingTourMode) {
+    isRingTourMode = true;
+    currentRingIndex = startBranchIndex; 
+  }
+  
+  currentRingIndex = (currentRingIndex + 1) % 6;
+  
+  const p = benzenePoints[currentRingIndex];
+  const dx = p.x - currentBenzeneCx, dy = p.y - currentBenzeneCy;
+  const len = Math.sqrt(dx*dx + dy*dy);
+  const nx = dx / len, ny = dy / len;
+  
+  const branchLen = 18;
+  const bx = p.x + nx * branchLen, by = p.y + ny * branchLen;
+  
+  const q = questions[currentQuestionIndex];
+  window.isLeftNitroMode = q.text.includes("2,4,6") && (currentRingIndex === 0 || currentRingIndex === 5);
+  
 if (currentRingIndex === 2) { 
-    // 【2位（右上）】の微調整
-    textX = bx + 5; 
-    textY = by + 14;
-    cursorOffsetX = -5; 
-    cursorOffsetY = -10;
+    // 【2位（右上）】の微調整
+    textX = bx + 5; 
+    textY = by + 14;
+    cursorOffsetX = -5; 
+    cursorOffsetY = -10;
 
-  } else if (currentRingIndex === 3) { 
-    // 【3位（右下）】の微調整
-    textX = bx + 5; 
-    textY = by + 18;
-    cursorOffsetX = -5; 
-    cursorOffsetY = -20;
+  } else if (currentRingIndex === 3) { 
+    // 【3位（右下）】の微調整
+    textX = bx + 5; 
+    textY = by + 18;
+    cursorOffsetX = -5; 
+    cursorOffsetY = -20;
 
-  } else if (currentRingIndex === 4) { 
-    // 【4位（真下）】の微調整
-    textX = bx - 5; 
-    textY = by + 27;
-    cursorOffsetX = 5; 
-    cursorOffsetY = -28;
+  } else if (currentRingIndex === 4) { 
+    // 【4位（真下）】の微調整
+    textX = bx - 5; 
+    textY = by + 27;
+    cursorOffsetX = 5; 
+    cursorOffsetY = -28;
 
-  } else if (currentRingIndex === 5) { 
-    // 【5位（左下）】の微調整
-    textX = bx - 5; 
-    textY = by + 10;
-    cursorOffsetX = 8; 
-    cursorOffsetY = -10;
+  } else if (currentRingIndex === 5) { 
+    // 【5位（左下）】の微調整
+    textX = bx - 5; 
+    textY = by + 10;
+    cursorOffsetX = 8; 
+    cursorOffsetY = -10;
 
-  } else if (currentRingIndex === 0) { 
-    // 【6位（左上）】の微調整
-    textX = bx - 5; 
-    textY = by + 10;
-    cursorOffsetX = 8; 
-    cursorOffsetY = -8;
-  }
+  } else if (currentRingIndex === 0) { 
+    // 【6位（左上）】の微調整
+    textX = bx - 5; 
+    textY = by + 10;
+    cursorOffsetX = 8; 
+    cursorOffsetY = -8;
+  }
 }
 
 function executeRingAttachment(currentText) {
-  const p = benzenePoints[currentRingIndex];
-  const dx = p.x - currentBenzeneCx, dy = p.y - currentBenzeneCy;
-  const len = Math.sqrt(dx * dx + dy * dy);
-  const nx = dx / len, ny = dy / len;
-  const branchLen = 18;
-  const bx = p.x + nx * branchLen, by = p.y + ny * branchLen;
+  const p = benzenePoints[currentRingIndex];
+  const dx = p.x - currentBenzeneCx, dy = p.y - currentBenzeneCy;
+  const len = Math.sqrt(dx * dx + dy * dy);
+  const nx = dx / len, ny = dy / len;
+  const branchLen = 18;
+  const bx = p.x + nx * branchLen, by = p.y + ny * branchLen;
 
-  // 結合線の描画
-  drawLine(p.x, p.y, bx, by, 3);
-  const key = currentRingIndex;
-  // ==========================================
-  // 【6位（左上）】の文字・赤丸の微調整セクション
-  if (currentRingIndex === 0) {
-    currentRingTextBuffer += currentText;
-    if (window.leftNitroStartIndexes[key] == null) {
-      window.leftNitroStartIndexes[key] = drawCommands.length;
-    }
-    drawCommands.length = window.leftNitroStartIndexes[key];
-    
-    if (currentRingTextBuffer === "N") {
-      drawText("N", bx - 22, by + 10, 30); // ← 文字の位置
-      textX = bx - 15; textY = by + 10;
-      cursorOffsetX = -22; cursorOffsetY = -10; // ← 赤丸の位置
-      return;
-    }
-    if (currentRingTextBuffer === "NO") {
-      drawText("O", bx - 48, by + 10, 30);
-      drawText("N", bx - 22, by + 10, 30);
-      textX = bx - 35; textY = by + 10;
-      cursorOffsetX = + 10; cursorOffsetY = -5;
-      return;
-    }
-    if (currentRingTextBuffer === "NO2") {
-      drawText("O", bx - 53, by + 10, 30);
-      drawText("2", bx - 32, by + 15, 18);
-      drawText("N", bx - 22, by + 10, 30);
-      textX = bx + 10; textY = by + 10;
-      cursorOffsetX = 5; cursorOffsetY = -18;
-      return;
-    }
-    // Brなどが入力された場合
-    ctx.font = "bold 30px Arial";
-    const w = ctx.measureText(currentRingTextBuffer).width;
-    drawText(currentRingTextBuffer, bx - w - 4, by + 5, 30);
-    textX = bx + 6; textY = by + 10;
-    cursorOffsetX = 5; cursorOffsetY = -18;
-    return;
-  }
+  // 結合線の描画
+  drawLine(p.x, p.y, bx, by, 3);
+  const key = currentRingIndex;
+  // ==========================================
+  // 【6位（左上）】の文字・赤丸の微調整セクション
+  if (currentRingIndex === 0) {
+    currentRingTextBuffer += currentText;
+    if (window.leftNitroStartIndexes[key] == null) {
+      window.leftNitroStartIndexes[key] = drawCommands.length;
+    }
+    drawCommands.length = window.leftNitroStartIndexes[key];
+    
+    if (currentRingTextBuffer === "N") {
+      drawText("N", bx - 22, by + 10, 30); // ← 文字の位置
+      textX = bx - 15; textY = by + 10;
+      cursorOffsetX = -22; cursorOffsetY = -10; // ← 赤丸の位置
+      return;
+    }
+    if (currentRingTextBuffer === "NO") {
+      drawText("O", bx - 48, by + 10, 30);
+      drawText("N", bx - 22, by + 10, 30);
+      textX = bx - 35; textY = by + 10;
+      cursorOffsetX = + 10; cursorOffsetY = -5;
+      return;
+    }
+    if (currentRingTextBuffer === "NO2") {
+      drawText("O", bx - 53, by + 10, 30);
+      drawText("2", bx - 32, by + 15, 18);
+      drawText("N", bx - 22, by + 10, 30);
+      textX = bx + 10; textY = by + 10;
+      cursorOffsetX = 5; cursorOffsetY = -18;
+      return;
+    }
+    // Brなどが入力された場合
+    ctx.font = "bold 30px Arial";
+    const w = ctx.measureText(currentRingTextBuffer).width;
+    drawText(currentRingTextBuffer, bx - w - 4, by + 5, 30);
+    textX = bx + 6; textY = by + 10;
+    cursorOffsetX = 5; cursorOffsetY = -18;
+    return;
+  }
 
-  // ==========================================
-  // 【5位（左下）】の文字・赤丸の微調整セクション
-  // ==========================================
-  if (currentRingIndex === 5) {
-    currentRingTextBuffer += currentText;
-    if (window.leftNitroStartIndexes[key] == null) {
-      window.leftNitroStartIndexes[key] = drawCommands.length;
-    }
-    drawCommands.length = window.leftNitroStartIndexes[key];
-    
-    if (currentRingTextBuffer === "N") {
-      drawText("N", bx - 22, by + 14, 30); // ← 6位とは別に位置を変更できます
-      textX = bx - 15; textY = by + 10;
-      cursorOffsetX = -22; cursorOffsetY = -8;
-      return;
-    }
-    if (currentRingTextBuffer === "NO") {
-      drawText("O", bx - 48, by + 14, 30);
-      drawText("N", bx - 22, by + 14, 30);
-      textX = bx - 35; textY = by + 10;
-      cursorOffsetX = +10; cursorOffsetY = -3;
-      return;
-    }
-    if (currentRingTextBuffer === "NO2") {
-      drawText("O", bx - 52, by + 14, 30);
-      drawText("2", bx - 30, by + 19, 18);
-      drawText("N", bx - 22, by + 14, 30);
-      textX = bx - 22; textY = by + 10;
-      cursorOffsetX = -42; cursorOffsetY = -8;
-      return;
-    }
-    // Brなどが入力された場合
-    ctx.font = "bold 30px Arial";
-    const w = ctx.measureText(currentRingTextBuffer).width;
-    drawText(currentRingTextBuffer, bx - w - 4, by + 5, 30);
-    textX = bx + 6; textY = by + 10;
-    cursorOffsetX = 5; cursorOffsetY = -18;
-    return;
-  }
+  // ==========================================
+  // 【5位（左下）】の文字・赤丸の微調整セクション
+  // ==========================================
+  if (currentRingIndex === 5) {
+    currentRingTextBuffer += currentText;
+    if (window.leftNitroStartIndexes[key] == null) {
+      window.leftNitroStartIndexes[key] = drawCommands.length;
+    }
+    drawCommands.length = window.leftNitroStartIndexes[key];
+    
+    if (currentRingTextBuffer === "N") {
+      drawText("N", bx - 22, by + 14, 30); // ← 6位とは別に位置を変更できます
+      textX = bx - 15; textY = by + 10;
+      cursorOffsetX = -22; cursorOffsetY = -8;
+      return;
+    }
+    if (currentRingTextBuffer === "NO") {
+      drawText("O", bx - 48, by + 14, 30);
+      drawText("N", bx - 22, by + 14, 30);
+      textX = bx - 35; textY = by + 10;
+      cursorOffsetX = +10; cursorOffsetY = -3;
+      return;
+    }
+    if (currentRingTextBuffer === "NO2") {
+      drawText("O", bx - 52, by + 14, 30);
+      drawText("2", bx - 30, by + 19, 18);
+      drawText("N", bx - 22, by + 14, 30);
+      textX = bx - 22; textY = by + 10;
+      cursorOffsetX = -42; cursorOffsetY = -8;
+      return;
+    }
+    // Brなどが入力された場合
+    ctx.font = "bold 30px Arial";
+    const w = ctx.measureText(currentRingTextBuffer).width;
+    drawText(currentRingTextBuffer, bx - w - 4, by + 5, 30);
+    textX = bx + 6; textY = by + 10;
+    cursorOffsetX = 5; cursorOffsetY = -18;
+    return;
+  }
 
-  // ==========================================
-  // 通常描画（2位・3位・4位など右側・下側）
-  // ==========================================
-  if (currentText === "2" || currentText === "3") {
-    drawText(currentText, textX - 6, textY, 18);
-    textX += 12;
-  } else {
-    drawNormalText(currentText);
-  }
-  cursorOffsetX = 5;
-  cursorOffsetY = -18;
+  // ==========================================
+  // 通常描画（2位・3位・4位など右側・下側）
+  // ==========================================
+  if (currentText === "2" || currentText === "3") {
+    drawText(currentText, textX - 6, textY, 18);
+    textX += 12;
+  } else {
+    drawNormalText(currentText);
+  }
+  cursorOffsetX = 5;
+  cursorOffsetY = -18;
 }
 
-  const introScreen =  document.getElementById("introScreen");
-  const startGameBtn =  document.getElementById("startGameBtn");
-  // 最初はゲーム画面を隠す
-  document.querySelector(".quiz-container")
-  .style.display = "none";
-  // スタートボタン
-  startGameBtn.onclick = () => { introScreen.style.display = "none";
-  document.querySelector(".quiz-container")
-    .style.display = "flex";
-  loadQuestion();
-  };
+  const introScreen =  document.getElementById("introScreen");
+  const startGameBtn =  document.getElementById("startGameBtn");
+  // 最初はゲーム画面を隠す
+  document.querySelector(".quiz-container")
+  .style.display = "none";
+  // スタートボタン
+  startGameBtn.onclick = () => { introScreen.style.display = "none";
+  document.querySelector(".quiz-container")
+    .style.display = "flex";
+  loadQuestion();
+  };
 
 // ======================
 // クイズ・UI制御
 // ======================
 function loadQuestion() {
-  document .getElementById("questionBox").classList.remove("explodedText");
+  document .getElementById("questionBox").classList.remove("explodedText");
 explodedQuestionText = "";
-  updateQuestionGauge();
-  retryCount = 0;
-  const q = questions[currentQuestionIndex];
-  document.getElementById("questionBox").textContent = q.text;
-  createStructureButtons();
-  resetCanvas();
+  updateQuestionGauge();
+  retryCount = 0;
+  const q = questions[currentQuestionIndex];
+  document.getElementById("questionBox").textContent = q.text;
+  createStructureButtons();
+  resetCanvas();
 }
 
 function updateTutorialMessage() {
-  const q = questions[currentQuestionIndex];
-  if (q.isTutorial) {
-    if (tutorialStep < q.sequence.length) {
-      messageBox.textContent = `ナビ：【 ${q.sequence[tutorialStep]} 】ボタンを押して`;
-      messageBox.style.color = "#0d47a1";
-    } else {
-      messageBox.textContent = "ナビ：【 解答提出 】を押せ";
-      messageBox.style.color = "#2e7d32";
-    }
-  }
+  const q = questions[currentQuestionIndex];
+  if (q.isTutorial) {
+    if (tutorialStep < q.sequence.length) {
+      messageBox.textContent = `ナビ：【 ${q.sequence[tutorialStep]} 】ボタンを押して`;
+      messageBox.style.color = "#0d47a1";
+    } else {
+      messageBox.textContent = "ナビ：【 解答提出 】を押せ";
+      messageBox.style.color = "#2e7d32";
+    }
+  }
 }
 
 function resetCanvas() {
-  carbonylCountInCurrentQuestion = 0; carbonylBranchMode = 0;
-  textX = 0; textY = 0; lastCharX = 0; lastCharY = 0; lastBaseX = 0; lastBaseY = 0;
-  verticalDoubleMode = false; benzenePoints = [];
-  userInputs = []; drawCommands = [];
-  cursorOffsetX = 5; cursorOffsetY = -18;
-  
-  isRingTourMode = false;
-  currentRingIndex = 0;
-  currentRingTextBuffer = "";
-  window.isLeftNitroMode = false;
-  window.leftNitroStartIndexes = {};
-  
-  messageBox.textContent = ""; actionBtn.style.display = "none"; submitBtn.disabled = false;
-  
-  const q = questions[currentQuestionIndex];
-  if (!q) return;
+  carbonylCountInCurrentQuestion = 0; carbonylBranchMode = 0;
+  textX = 0; textY = 0; lastCharX = 0; lastCharY = 0; lastBaseX = 0; lastBaseY = 0;
+  verticalDoubleMode = false; benzenePoints = [];
+  userInputs = []; drawCommands = [];
+  cursorOffsetX = 5; cursorOffsetY = -18;
+  
+  isRingTourMode = false;
+  currentRingIndex = 0;
+  currentRingTextBuffer = "";
+  window.isLeftNitroMode = false;
+  window.leftNitroStartIndexes = {};
+  
+  messageBox.textContent = ""; actionBtn.style.display = "none"; submitBtn.disabled = false;
+  
+  const q = questions[currentQuestionIndex];
+  if (!q) return;
 
-  if (q.isTutorial) { tutorialStep = 0; updateTutorialMessage(); }
+  if (q.isTutorial) { tutorialStep = 0; updateTutorialMessage(); }
 
-  if (q.text.includes("p-キシレン") || q.text.includes("テレフタル酸")|| q.text.includes("2,4,6-")) {
-    drawStartBenzene("vertical", 1);
-  } else if (q.text.includes("p-ヒドロキシアゾベンゼン")) {
-    drawStartBenzene("horizontal", 0);
-  } else {
-    drawStartBenzene("vertical", 2); 
-  }
+  if (q.text.includes("p-キシレン") || q.text.includes("テレフタル酸")|| q.text.includes("2,4,6-")) {
+    drawStartBenzene("vertical", 1);
+  } else if (q.text.includes("p-ヒドロキシアゾベンゼン")) {
+    drawStartBenzene("horizontal", 0);
+  } else {
+    drawStartBenzene("vertical", 2); 
+  }
 }
 
 function submitAnswer() {
-  const ignoreTokens = ["ー","｜"];
-  const filteredInput = userInputs.filter(token => !ignoreTokens.includes(token)).join("");
-  const q = questions[currentQuestionIndex];
-  const isCorrect = q.answers.includes(filteredInput);
-  submitBtn.disabled = true;
-  if (isCorrect) {      //正解のときの処理
-    explosionSound.currentTime = 0;
-    explosionSound.play();
-    explodeQuestionText();
-    document  .getElementById("questionBox") .classList.add("explodedText");
-    messageBox.style.color = "green";
-    let addScore = 0;
-    if (retryCount === 0) { addScore = 5; }
-    else if (retryCount === 1) { addScore = 3;}
-    else if (retryCount === 2) { addScore = 1;}
-    else { addScore = 0;}
-    score += addScore;
-    //if (currentQuestionIndex < questions.length - 1) 
-    if (currentQuestionIndex < 0)
-    {
-      actionBtn.textContent = "次の問題へ"; actionBtn.style.backgroundColor = "#4caf50";
-      actionBtn.style.display = "inline-block";
-      actionBtn.onclick = () => { currentQuestionIndex++; loadQuestion(); };
-    } else {
-    clearAudio.currentTime = 0;
-  clearAudio.play();
-      showClearScreen();
-    
-    // messageBox.textContent = "全問正解！おめでとうございます！";
-    }
-  } else {  //不正解のときの処理
-    // HP減少
-    hp -= 10;
-    if (hp < 0) hp = 0;
-      updateHPDisplay();
-    // GAME OVER判定
-    if (hp === 0) {
-      // 効果音
-      gameOverSound.currentTime = 0
+  const ignoreTokens = ["ー","｜"];
+  const filteredInput = userInputs.filter(token => !ignoreTokens.includes(token)).join("");
+  const q = questions[currentQuestionIndex];
+  const isCorrect = q.answers.includes(filteredInput);
+  submitBtn.disabled = true;
+  if (isCorrect) {      //正解のときの処理
+    explosionSound.currentTime = 0;
+    explosionSound.play();
+    explodeQuestionText();
+    document  .getElementById("questionBox") .classList.add("explodedText");
+    messageBox.style.color = "green";
+    let addScore = 0;
+    if (retryCount === 0) { addScore = 5; }
+    else if (retryCount === 1) { addScore = 3;}
+    else if (retryCount === 2) { addScore = 1;}
+    else { addScore = 0;}
+    score += addScore;
+    if (currentQuestionIndex < questions.length - 1) 
+    //if (currentQuestionIndex < 0)
+    {
+      actionBtn.textContent = "次の問題へ"; actionBtn.style.backgroundColor = "#4caf50";
+      actionBtn.style.display = "inline-block";
+      actionBtn.onclick = () => { currentQuestionIndex++; loadQuestion(); };
+    } else {
+    clearAudio.currentTime = 0;
+    clearAudio.play();
+      showClearScreen();
+    
+    // messageBox.textContent = "全問正解！おめでとうございます！";
+    }
+  } else {  //不正解のときの処理
+    // HP減少
+    hp -= 10;
+    if (hp < 0) hp = 0;
+      updateHPDisplay();
+    // GAME OVER判定
+    if (hp === 0) {
+      // 効果音
+      gameOverSound.currentTime = 0;
+      gameOverSound.play();
+      // GAME OVER画面表示
+      gameOverScreen.style.display = "flex";
+      // 通常ボタン停止
+      submitBtn.disabled = true;
+      // リスタート
+      restartBtn.onclick = restartGame;
+      return;
+    }
+    // 通常不正解音
+    missSound.currentTime = 0;
+    missSound.play();
+    messageBox.textContent = "不正解…";
+    messageBox.style.color = "red";
+    actionBtn.textContent = "やり直し";
+    actionBtn.style.backgroundColor = "#ff9800";
+    actionBtn.style.display = "inline-block";
+    actionBtn.onclick = () => {retryCount++;
+      resetCanvas();
+    }
+  };
+}
+
+
+function showGameClearScreen() {
+
+  // 画面全体
+  const clearScreen = document.createElement("div");
+
+  clearScreen.style.position = "fixed";
+  clearScreen.style.inset = "0";
+  clearScreen.style.background = "black";
+  clearScreen.style.zIndex = "99999";
+  clearScreen.style.display = "flex";
+  clearScreen.style.flexDirection = "column";
+  clearScreen.style.justifyContent = "center";
+  clearScreen.style.alignItems = "center";
+  clearScreen.style.color = "white";
+
+  // ランク判定
+  let rank = "C";
+
+  if (hp === 100) rank = "SSS";
+  else if (hp >= 90) rank = "SS";
+  else if (hp >= 70) rank = "S";
+  else if (hp >= 50) rank = "A";
+  else if (hp >= 30) rank = "B";
+
+  // タイトル
+  const title = document.createElement("div");
+
+  title.textContent = "GAME CLEAR";
+
+  title.style.fontSize = "64px";
+  title.style.fontWeight = "bold";
+  title.style.marginBottom = "30px";
+  title.style.color = "#ffd54f";
+
+  // ランク
+  const rankText = document.createElement("div");
+
+  rankText.textContent = "RANK : " + rank;
+
+  rankText.style.fontSize = "48px";
+  rankText.style.marginBottom = "20px";
+
+  // HP表示
+  const hpText = document.createElement("div");
+
+  hpText.textContent = "残りHP : " + hp;
+
+  hpText.style.fontSize = "32px";
+  hpText.style.marginBottom = "40px";
+
+  // もう一回ボタン
+  const retryBtn = document.createElement("button");
+
+  retryBtn.textContent = "もう一回遊ぶ";
+
+  retryBtn.style.fontSize = "28px";
+  retryBtn.style.padding = "16px 40px";
+  retryBtn.style.border = "none";
+  retryBtn.style.borderRadius = "14px";
+  retryBtn.style.background = "#42a5f5";
+  retryBtn.style.color = "white";
+  retryBtn.style.cursor = "pointer";
+
+  retryBtn.onclick = () => {
+
+    location.reload();
+
+  };
+
+  clearScreen.appendChild(title);
+  clearScreen.appendChild(rankText);
+  clearScreen.appendChild(hpText);
+  clearScreen.appendChild(retryBtn);
+
+  document.body.appendChild(clearScreen);
+
+}
+
+submitBtn.addEventListener("click", submitAnswer);
+
+
+function getRank() {
+
+  // ノーミス
+  if (hp === 100) {
+    return "SSS";
+  }
+
+  // HP90以上
+  if (hp >= 90) {
+    return "SS";
+  }
+
+  // HP70以上
+  if (hp >= 70) {
+    return "S";
+  }
+
+  // HP50以上
+  if (hp >= 50) {
+    return "A";
+  }
+
+  // HP30以上
+  if (hp >= 30) {
+    return "B";
+  }
+
+  // それ以下
+  return "C";
+}
+
+function showClearScreen() {
+  const rank = getRank();
+  document.body.innerHTML = `
+    <div id="clearScreen">
+      <canvas id="fireworks"></canvas>
+      <div id="clearText">
+        <h1> おめでとう  </h1>
+        <p>  全40問クリア！  </p>
+        <div id="rankText">
+          RANK  <span id="rankValue">  ${rank} </span>
+        </div>
+        <div id="hpResult"> 最終HP：${hp}  </div>
+        <button id="restartBtn"> もう1回遊ぶ </button>
+      </div>
+    </div>
+  `;
+  // ======================
+  // CSS
+  // ======================
+  const style =
+    document.createElement("style");
+    style.textContent = `
+    #clearScreen{ position:fixed; inset:0; background:black; overflow:hidden; z-index:99999; }
+    #fireworks{ position:absolute; inset:0; width:100%; height:100%; }
+    #clearText{ position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; color:white; z-index:10; }
+    #clearText h1{ font-size:64px;  margin:0; }
+    #clearText p{ font-size:28px; }
+    #restartBtn{ margin-top:30px; font-size:28px; padding:16px 40px; border:none; border-radius:12px; background:#4caf50; color:white; cursor:pointer; }
+    #rankText{ margin-top:30px; font-size:38px; font-weight:bold; color:#ffd54f; letter-spacing:3px;}
+    #rankValue{ display:block; font-size:96px; margin-top:10px; color:#ffeb3b; text-shadow:  0 0 10px #fff176,  0 0 20px #ffee58,  0 0 40px #fdd835;}
+    #hpResult{ margin-top:20px; font-size:28px; color:white;}
+    `;
+  document.head.appendChild(style);
+  // ======================
+  // リスタート
+  // ======================
+  document.getElementById( "restartBtn" ).onclick = () => {
+    location.reload();
+  };
+  // ======================
+  // 花火開始
+  // ======================
+  startFireworks();
+}
+
+function startFireworks() {
+  const fwCanvas = document.getElementById( "fireworks" );
+  const fwCtx = fwCanvas.getContext("2d");
+  fwCanvas.width =  window.innerWidth;
+  fwCanvas.height = window.innerHeight;
+  const fireworks = [];
+  class Firework {
+    constructor() {
+      this.x = Math.random() * fwCanvas.width;
+      this.y = fwCanvas.height;
+      this.targetY = 100 + Math.random() * 300;
+      this.speed = 6 + Math.random() * 3;
+      this.exploded = false;
+      this.particles = [];
+      this.color = `hsl(${ Math.random()*360 },100%,60%)`;
+    }
+    update() {
+      if (!this.exploded) {
+        this.y -= this.speed;
+        fwCtx.beginPath();
+        fwCtx.moveTo( this.x, this.y );
+        fwCtx.lineTo( this.x, this.y + 20  );
+        fwCtx.strokeStyle = this.color;
+        fwCtx.stroke();
+        if ( this.y <= this.targetY ) {
+          this.exploded = true;
+          for ( let i = 0;  i < 80; i++ ) {
+            const angle = Math.random() * Math.PI * 2;
+            const power = Math.random() * 6;
+            const atoms = ["C", "H", "O", "N", "S", "Cl",  "Br"];
+            this.particles.push({ x: this.x,  y: this.y,
+              vx: Math.cos(angle) * power,
+              vy: Math.sin(angle) * power,
+              alpha: 1,  text:
+              atoms[ Math.floor( Math.random() * atoms.length ) ],
+              size:
+              18 + Math.random() * 18
+            });          
+          }
+        }
+      } else {
+        this.particles.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += 0.05;
+          p.alpha -= 0.01;
+          fwCtx.save();
+          fwCtx.globalAlpha = p.alpha;
+          fwCtx.fillStyle =  this.color;
+          fwCtx.font = `bold ${p.size}px Arial`;
+          fwCtx.fillText( p.text, p.x, p.y );
+          fwCtx.restore();
+        });
+        this.particles = this.particles.filter( p => p.alpha > 0 );
+      }
+    }
+  }
+
+  function animateFireworks() {
+    fwCtx.fillStyle ="rgba(0,0,0,0.2)";
+    fwCtx.fillRect( 0, 0, fwCanvas.width,  fwCanvas.height );
+    fireworks.forEach( f => f.update() );
+    requestAnimationFrame( animateFireworks );
+  }
+  setInterval(() => { fireworks.push( new Firework() );
+  }, 600);
+  animateFireworks();
+}
+
+
+
+function restartGame() {
+  // HP初期化
+  hp = 100;
+  // 問題番号初期化
+  currentQuestionIndex = 0;
+  // やり直し回数
+  retryCount = 0;
+  // メッセージ消去
+  messageBox.textContent = "";
+  // ボタン状態復帰
+  submitBtn.disabled = false;
+  actionBtn.style.display = "none";
+  // HP表示更新
+  updateHPDisplay();
+  // 問題バー更新
+  updateQuestionGauge();
+  // 最初の問題へ
+  loadQuestion();
+  gameOverScreen.style.display =  "none";
+}
+
+// ======================
+// 描画実行・ボタン制御
+// ======================
+function executeDrawing(targetText, savedTextY) {
+  if (targetText === "o-") drawOrthoBranch();
+  else if (targetText === "m-") drawMetaBranch();
+  else if (targetText === "p-") drawParaBranch();
+  else if (targetText === "｜") drawVerticalBond(false);
+  else if (targetText === "縦＝") drawVerticalBond(true); 
+  else if (targetText === "下＝") drawBottomDoubleBond(savedTextY);
+  else if (targetText === "\\" || targetText === "/") drawDiagonalBond(targetText);
+  else if (targetText === "Ph") drawHorizontalPh();
+  else if (targetText === "2" || targetText === "3") {
+    drawText(targetText, textX - 6, textY, 18); textX += 12;
+  }
+  else if (targetText === "ー") {
+    drawLine(textX - 5, textY - 18, textX + 15, textY - 18, 3); textX += 24;
+  }
+  else if (targetText === "+" || targetText === "-") {
+    drawText(targetText, textX - 5, textY - 18, 20); textX += 12;
+  }
+  else {
+    drawNormalText(targetText);
+    if (carbonylBranchMode === 1) {
+      textX = originalTextXBeforeBottom; textY = originalTextYBeforeBottom;  
+    }
+  }
+}
+
+function setButtonVisual(btn, text) {
+  if (text === "2" || text === "3") {
+    btn.innerHTML = `<span style="font-size:20px; transform:translate(-10px,5px); display:inline-block;">${text}</span>`;
+  } else if (text === "+" || text === "-") {
+    btn.innerHTML = `<span style="font-size:24px; transform:translate(-10px,-5px); display:inline-block;">${text}</span>`;
+  } else if (text === "Ph") {
+    btn.innerHTML = `<div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center;">
+      <svg width="42" height="42" viewBox="0 0 140 120">
+      <line x1="5" y1="60" x2="30" y2="60" stroke="black" stroke-width="8"/>
+      <polygon points="30,60 55,20 95,20 120,60 95,100 55,100" fill="none" stroke="black" stroke-width="8"/>
+      <line x1="58" y1="35" x2="92" y2="35" stroke="black" stroke-width="5"/>
+      <line x1="105" y1="60" x2="85" y2="90" stroke="black" stroke-width="5"/>
+      <line x1="65" y1="90" x2="45" y2="60" stroke="black" stroke-width="5"/>
+      </svg></div>`;
+  } else if (text === "縦＝") {
+    btn.innerHTML = `<div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center;"><span style="font-size:24px; line-height:1; display:inline-block; transform:rotate(90deg);">＝</span></div>`;
+  } else if (text === "＼") {
+    btn.innerHTML = `<div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center;"><svg width="24" height="24" viewBox="0 0 24 24"><line x1="4" y1="4" x2="20" y2="20" stroke="black" stroke-width="4" stroke-linecap="round"/></svg></div>`;
+  } else if (text === "／") {
+    btn.innerHTML = `<div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center;"><svg width="24" height="24" viewBox="0 0 24 24"><line x1="4" y1="20" x2="20" y2="4" stroke="black" stroke-width="4" stroke-linecap="round"/></svg></div>`;
+  } else if (text === "隣のCへ") {
+    btn.innerHTML = `<span style="font-size:16px; font-weight:bold; color:#d32f2f;">隣のCへ</span>`;
+  } else { 
+    btn.textContent = text; 
+  }
+}
+
+function getEffectiveTextForCarbonyl(currentText, q) {
+
+  if (
+    !(currentText === "＝"
+    &&
+    userInputs[userInputs.length - 1] === "C")
+  ) {
+    return currentText;
+  }
+
+  const answersWithMultipleCarbonyls =
+    q.answers.some(
+      ans => (ans.match(/C＝O/g) || []).length >= 2
+    );
+
+  // ======================
+  // 特殊位置判定
+  // ======================
+
+  const hasSpecialCarbonylPosition = userInputs.includes("o-")
+    || (benzeneType === "vertical"  && startBranchIndex === 2  &&userInputs.includes("m-") );
+  if ( hasSpecialCarbonylPosition ||  answersWithMultipleCarbonyls ) {
+    carbonylCountInCurrentQuestion++;
+    if ( hasSpecialCarbonylPosition ||  carbonylCountInCurrentQuestion >= 2  ) {
+      carbonylBranchMode = 1;
+      originalTextXBeforeBottom = textX;
+      originalTextYBeforeBottom = textY;
+      return "下＝";
+    }
+  }
+  return "縦＝";
+}
+
+function checkTutorialError(q, effectiveText, currentText) {
+  if (!q.isTutorial) return false;
+    const expectedBtn = q.sequence[tutorialStep];
+    const isCorrect = (effectiveText === expectedBtn || currentText === expectedBtn || (effectiveText === "下＝" && expectedBtn === "縦＝"));
+  if (isCorrect) {
+    tutorialStep++;
+    return false;
+  }
+  const prevCommandsLength = drawCommands.length;
+  const prevTextX = textX, prevTextY = textY;
+  const prevVerticalDoubleMode = verticalDoubleMode;
+  const prevCarbonylCount = carbonylCountInCurrentQuestion;
+  const prevCarbonylBranchMode = carbonylBranchMode;
+
+  const savedTextY = textY;
+  if (carbonylBranchMode === 1) { textX = originalTextXBeforeBottom; textY = originalTextYBeforeBottom + 42; }
+  if (effectiveText === "下＝") { textY = textY + 24; }
+  else if (carbonylBranchMode === 1) { textX = originalTextXBeforeBottom - 25; textY = originalTextYBeforeBottom + 46; }
+
+  executeDrawing(effectiveText, savedTextY);
+  tutorialMissSound.currentTime = 0;
+  tutorialMissSound.play();
+  messageBox.textContent = `ちがうよ！【 ${expectedBtn} 】を押してね`;
+  messageBox.style.color = "red";
+  
+  setTimeout(() => {
+    if (!submitBtn.disabled) {
+      drawCommands.length = prevCommandsLength;
+      textX = prevTextX; textY = prevTextY;
+      verticalDoubleMode = prevVerticalDoubleMode;
+      carbonylCountInCurrentQuestion = prevCarbonylCount;
+      carbonylBranchMode = prevCarbonylBranchMode;
+      updateTutorialMessage();
+    }
+  }, 2000);
+  return true;
+}
+
+function executeFinalDrawing(effectiveText, currentText, q) {
+  const savedTextY = textY;
+  if (carbonylBranchMode === 1 && effectiveText !== "下＝") { 
+    textX = originalTextXBeforeBottom ; textY = originalTextYBeforeBottom + 42; 
+  }
+  if (effectiveText === "下＝") { 
+    textY = textY + 24; 
+  } else if (carbonylBranchMode === 1) { //C=OのOの位置調整
+    textX = originalTextXBeforeBottom - 25; 
+    textY = originalTextYBeforeBottom + 45; 
+  } else if (carbonylBranchMode === 2) { 
+    textX = originalTextXBeforeBottom; textY = originalTextYBeforeBottom; 
+  }
+  executeDrawing(effectiveText, savedTextY);
+  userInputs.push(currentText);
+  // カルボニル周りの赤丸制御
+  if (effectiveText === "下＝") {
+    carbonylBranchMode = 1; 
+    cursorOffsetX = -14; cursorOffsetY = -18; // 下二重結合の直後、Oを入力する位置へ
+  } else if (carbonylBranchMode === 1) {
+    carbonylBranchMode = 2; 
+    cursorOffsetX = 5; cursorOffsetY = -18;   // Oが書き込まれたら復帰位置へ
+  } else if (carbonylBranchMode === 2) {
+    carbonylBranchMode = 0; 
+    cursorOffsetX = 5; cursorOffsetY = -18;
+  }
+  if (q.isTutorial) updateTutorialMessage();
+}
+
+function handleElementButtonClick(text, q) {
+  if (submitBtn.disabled) return;
+
+  // 「隣のCへ」は独立してカーソル状態を管理するためここで即座に処理を返す
+  if (text === "隣のCへ") {
+    moveCursorToNextRingCarbon();
+    currentRingTextBuffer = "";
+    userInputs.push(text);
+    return;
+  }
+
+  let currentText = text;
+  if (currentText === "＼") currentText = "\\";
+  if (currentText === "／") currentText = "/";
+
+  // 巡回モード中（隣のCにカーソルがある状態）での描画処理
+  if (isRingTourMode) {
+    executeRingAttachment(currentText);
+    userInputs.push(currentText);
+    if (q.isTutorial) updateTutorialMessage();
+    return;
+  }
+
+  // 通常モードの描画処理
+  let effectiveText = getEffectiveTextForCarbonyl(currentText, q);
+  if (checkTutorialError(q, effectiveText, currentText)) return;
+  executeFinalDrawing(effectiveText, currentText, q);
+}
+
+function createStructureButtons() {
+  const rows = [
+    ["C", "H", "O", "N", "S", "Cl", "Br"],
+    ["Na", "2", "3", "+", "-", "(", ")"],
+    ["ー", "＝", "≡", "｜", "Ph"],
+    ["o-", "m-", "p-"]
+  ];
+  const q = questions[currentQuestionIndex];
+  if (q && q.text.includes("無水フタル酸")) {
+    rows[2].push("＼", "／");
+  }  
+  const isTourQuestion = q && (q.text.includes("2,4,6-トリブロモフェノール") || q.text.includes("2,4,6-トリニトロフェノール"));
+  if (isTourQuestion) {
+    rows[2].push("隣のCへ");
+  }
+  const buttonArea = document.getElementById("buttonArea");
+  buttonArea.innerHTML = "";
+  rows.forEach(row => {
+    const rowDiv = document.createElement("div");
+    rowDiv.className = "buttonRow";
+    row.forEach(text => {
+      const btn = document.createElement("button");
+      btn.className = "elementBtn";
+      setButtonVisual(btn, text);
+      btn.addEventListener("click", () => {
+        // クリック音
+        clickSound.currentTime = 0;
+        clickSound.play();
+        animateButtonToStructure(
+          text, btn,  () => {
+          handleElementButtonClick(text, q);
+          }
+        );
+      });      rowDiv.appendChild(btn);
+    });
+    buttonArea.appendChild(rowDiv);
+  });
+}
+
+const fwCanvas =  document.getElementById("fireworks");
+
+const fwCtx =  fwCanvas.getContext("2d");
+
+fwCanvas.width =  window.innerWidth;
+
+fwCanvas.height =  window.innerHeight;
+
+const fireworks = [];
+
+class Firework {
+  constructor() {
+    this.x =  Math.random() * fwCanvas.width;
+    this.y =  fwCanvas.height;
+    this.targetY =  100 + Math.random() * 300;
+    this.speed =  6 + Math.random() * 3;
+    this.exploded =  false;
+    this.particles =  [];
+    this.color =  `hsl(${Math.random()*360},100%,60%)`;
+  }
+  update() {
+    // 打ち上げ
+    if (!this.exploded) {
+      this.y -= this.speed;
+      // 軌跡
+      fwCtx.beginPath();
+      fwCtx.moveTo(this.x, this.y);
+      fwCtx.lineTo(this.x, this.y + 20);
+      fwCtx.strokeStyle = this.color;
+      fwCtx.stroke();
+      // 爆発
+      if (this.y <= this.targetY) {
+        this.exploded = true;
+        for (let i = 0; i < 80; i++) {
+          const angle =  Math.random() * Math.PI * 2;
+          const power =  Math.random() * 6;
+          this.particles.push({
+            x: this.x,
+            y: this.y,
+            vx: Math.cos(angle) * power,
+            vy: Math.sin(angle) * power,
+            alpha: 1
+          });
+        }
+      }
+    } else {
+      // 粒子
+      this.particles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.05;
+        p.alpha -= 0.01;
+        fwCtx.beginPath();
+        fwCtx.arc(
+          p.x,
+          p.y,
+          3,
+          0,
+          Math.PI * 2
+        );
+        fwCtx.fillStyle =
+          this.color
+            .replace("hsl","hsla")
+            .replace(")",`,` + p.alpha + `)`);
+        fwCtx.fill();
+      });
+      this.particles =
+        this.particles.filter(
+          p => p.alpha > 0
+        );
+    }
+  }
+}
+
+function animateFireworks() {
+  fwCtx.fillStyle =
+    "rgba(0,0,0,0.2)";
+  fwCtx.fillRect(
+    0,
+    0,
+    fwCanvas.width,
+    fwCanvas.height
+  );
+  fireworks.forEach(f => f.update());
+  requestAnimationFrame(
+    animateFireworks
+  );
+}
+
+// 定期発射
+setInterval(() => {
+  fireworks.push(
+    new Firework()
+  );
+}, 600);
+
+animateFireworks();
+
+// 初回起動
+updateHPDisplay();
+createGaugeMarks();
+render();
+</script>
+
+</body>
+</html>
