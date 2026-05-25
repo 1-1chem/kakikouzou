@@ -8,25 +8,26 @@
     * { box-sizing: border-box; }
     body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; margin: 0; padding: 15px; background: #f5f5f5; }
     .quiz-container { width: 100%; max-width: 380px; display: flex; flex-direction: column; align-items: center; }
-    
-    #scoreBox { width:90%; display:flex; align-items:center; gap:14px; font-size:18px; font-weight:bold; margin: 0 auto 12px auto; background:#e3f2fd; padding:10px 16px; border-radius:20px; border:1px solid #90caf9; color:#0d47a1; }    
+
+    #scoreBox { width:90%; display:flex; align-items:center; gap:14px; font-size:18px; font-weight:bold; margin: 0 auto 12px auto; background:#e3f2fd; padding:10px 16px; border-radius:20px; border:1px solid #90caf9; color:#0d47a1; }
     #questionBox { width:90%; min-height: 70px; background: white; border: 2px solid #666; border-radius: 8px; margin: 0 auto 6px auto; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 22px; font-weight: bold; padding: 10px; text-align: center; }
     #display { position: relative; width: 90%; aspect-ratio: 5 / 3; border: 1px solid #aaa; background: white; border-radius: 8px; }
     #canvas { width: 100%; height: 100%; display: block; }
-    
+
     #buttonArea { margin-top: 12px; text-align: center; width: 100%; }
     .buttonRow { display: flex; justify-content: center; margin-bottom: 4px; }
     .elementBtn { width: 42px; height: 40px; margin: 3px; padding: 0; border: 1px solid #888; background: linear-gradient(to bottom, #ffffff, #e6e6e6); border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18); font-size: 18px; font-family: Arial; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; vertical-align: bottom; -webkit-tap-highlight-color: transparent; }
     .elementBtn:hover { background: linear-gradient(to bottom, #ffffff, #dcdcdc); }
     .elementBtn:active { transform: translateY(2px); }
-    
+
     #controlArea { width:90%; margin: 15px auto 0 auto; display: flex; gap: 12px; align-items: center; }
-    #submitBtn, #actionBtn { flex: 1; font-size: 18px; font-weight: bold; padding: 12px 0; border-radius: 8px; border: none; cursor: pointer; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); text-align: center; }
+    #submitBtn, #actionBtn, #deleteBtn { flex: 1; font-size: 18px; font-weight: bold; padding: 12px 0; border-radius: 8px; border: none; cursor: pointer; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); text-align: center; }
     #submitBtn { background-color: #4caf50; color: white; }
     #submitBtn:disabled { background-color: #ccc; cursor: not-allowed; box-shadow: none; }
     #actionBtn { background-color: #ff9800; color: white; }
+    #deleteBtn { background-color: #f44336; color: white; }
     #messageBox { margin-top: 12px; font-size: 18px; font-weight: bold; min-height: 27px; text-align: center; }
-    
+
     /* ===================== 説明画面 ===================== */
     #introScreen{position:fixed; inset:0; background:#f5f5f5; display:flex; justify-content:center; align-items:center; z-index:9999;}
     #introBox{ width:min(92%, 650px);  background:white;  border-radius:18px; padding:28px; box-shadow:0 4px 18px rgba(0,0,0,0.2);}
@@ -35,7 +36,7 @@
     #introText ul{ padding-left:24px;}
     .warning{ margin-top:18px; padding:14px; border-radius:10px; background:#fff3e0; color:#d84315; font-weight:bold;}
     #startGameBtn{ width:100%; margin-top:20px; padding:16px 0; font-size:22px; font-weight:bold; border:none; border-radius:12px; background:#4caf50; color:white; cursor:pointer;}
-    
+
     /* ===================== HPバー・ゲージ ===================== */
     #hpBarOuter{ flex:1; height:20px; background:#ddd; border-radius:10px; overflow:hidden;}
     #hpBarInner{ width:100%; height:100%; background: linear-gradient(to right, #66bb6a, #43a047 ); transition:width 0.3s;}
@@ -44,14 +45,14 @@
     #gaugeMarks{ position:absolute; inset:0; z-index:5; pointer-events:none;}
     .gaugeMark{ position:absolute; left:0; width:100%; height:2px; background: rgba(255,255,255,0.85);}
     .explodedText{ color: rgb(204, 203, 203); -webkit-text-stroke: 1px white;}
-    
+
     /* ====================== GAME OVER / CLEAR画面 ====================== */
     #gameOverScreen{ position:fixed; inset:0; background:black; display:none; justify-content:center; align-items:center; z-index:20000;}
     #gameOverBox{ text-align:center;}
     #gameOverTitle{ font-size:64px; font-weight:bold; color:#ff5252; letter-spacing:6px; margin-bottom:40px; text-shadow: 0 0 12px red, 0 0 30px red;}
     #restartBtn{ font-size:28px; padding:18px 42px; border:none; border-radius:16px; background:#1976d2; color:white; font-weight:bold; cursor:pointer; box-shadow: 0 0 20px rgba(255,255,255,0.3);}
     #restartBtn:hover{ transform:scale(1.05);}
-    
+
     /* 動的生成されるクリア画面用の基本スタイル */
     #clearScreen{ position:fixed; inset:0; background:black; overflow:hidden; z-index:99999; display:none; }
     #fireworks{ position:absolute; inset:0; width:100%; height:100%; }
@@ -93,6 +94,7 @@
   </div>
   <div id="controlArea">
     <button id="submitBtn">解答提出</button>
+    <button id="deleteBtn">消去</button>
     <button id="actionBtn" style="display: none;"></button>
   </div>
   <div id="messageBox"></div>
@@ -184,8 +186,8 @@ let benzeneType = "vertical", startBranchIndex = 1;
 let cursorOffsetX = 5, cursorOffsetY = -18;
 
 let carbonylCountInCurrentQuestion = 0, carbonylBranchMode = 0;
-let originalTextXBeforeBottom = 0, originalTextYBeforeBottom = 0; 
-let isRingTourMode = false, currentRingIndex = 0, currentRingTextBuffer = ""; 
+let originalTextXBeforeBottom = 0, originalTextYBeforeBottom = 0;
+let isRingTourMode = false, currentRingIndex = 0, currentRingTextBuffer = "";
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
@@ -193,6 +195,7 @@ ctx.scale(2, 2);
 
 const submitBtn = document.getElementById("submitBtn");
 const actionBtn = document.getElementById("actionBtn");
+const deleteBtn = document.getElementById("deleteBtn");
 const messageBox = document.getElementById("messageBox");
 const scoreDisplay = document.getElementById("score");
 const gameOverScreen = document.getElementById("gameOverScreen");
@@ -248,7 +251,7 @@ function explodeQuestionText() {
 function render() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawCommands.forEach(cmd => cmd());
-  
+
   for (let i = explosionParticles.length - 1; i >= 0; i--) {
     const p = explosionParticles[i];
     p.x += p.vx; p.y += p.vy; p.vy += 0.1; p.rot += p.vr; p.life -= 0.001;
@@ -262,7 +265,7 @@ function render() {
     ctx.restore();
     if (p.life <= 0) explosionParticles.splice(i, 1);
   }
- 
+
   for (let i = flyingTexts.length - 1; i >= 0; i--) {
     const f = flyingTexts[i];
     f.progress += 0.05;
@@ -280,7 +283,7 @@ function render() {
     ctx.fillStyle = "blue";
     ctx.fillText(f.text, x, y);
   }
-  
+
   if (!submitBtn.disabled) {
     const alpha = (Math.sin(Date.now() / 200) + 1) / 2;
     ctx.beginPath();
@@ -312,8 +315,8 @@ function animateButtonToStructure(text, buttonElement, onFinish) {
   const rect = buttonElement.getBoundingClientRect();
   const canvasRect = canvas.getBoundingClientRect();
   flyingTexts.push({
-    text, 
-    startX: rect.left - canvasRect.left + rect.width / 2, 
+    text,
+    startX: rect.left - canvasRect.left + rect.width / 2,
     startY: rect.top - canvasRect.top + rect.height / 2,
     endX: textX, endY: textY, progress: 0, onFinish
   });
@@ -325,7 +328,7 @@ function drawNormalText(text) {
   lastCharX = textX; lastCharY = textY;
   ctx.font = "bold 30px Arial";
   const w = ctx.measureText(text).width;
-  if (verticalDoubleMode) { textX = lastBaseX + w + 2; textY = lastBaseY; verticalDoubleMode = false; } 
+  if (verticalDoubleMode) { textX = lastBaseX + w + 2; textY = lastBaseY; verticalDoubleMode = false; }
   else { textX += w + 2; }
 }
 
@@ -346,7 +349,7 @@ function drawBottomDoubleBond(savedTextY) {
   const centerX = textX + 7;
   drawLine(centerX - 29, savedTextY - 2, centerX - 29, savedTextY + 16, 2);
   drawLine(centerX - 23, savedTextY - 2, centerX - 23, savedTextY + 16, 2);
-  textX = originalTextXBeforeBottom - 5; textY = savedTextY + 42;               
+  textX = originalTextXBeforeBottom - 5; textY = savedTextY + 42;
 }
 
 function drawDiagonalBond(targetText) {
@@ -372,14 +375,14 @@ function createHexagonPoints(cx, cy, r, type) {
 function drawRing(points, cx, cy, r, isBenzene = true) {
   addCommand(() => {
     // ① 六角形（外枠）を描画
-    ctx.beginPath(); 
+    ctx.beginPath();
     ctx.moveTo(points[0].x, points[0].y);
     for (let i = 1; i < 6; i++) ctx.lineTo(points[i].x, points[i].y);
-    ctx.closePath(); 
-    ctx.lineWidth = 3; 
-    ctx.strokeStyle = "black"; 
+    ctx.closePath();
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = "black";
     ctx.stroke();
-    
+
     // ② isBenzene が true の時だけ内側の二重結合を描画
     if (isBenzene) {
       const dbl = (p1, p2) => {
@@ -402,57 +405,57 @@ function drawStartBenzene(type, branchIndex, isCyclohexane = false) {
   const cx = type === "vertical" ? 150 : 100;
   const cy = currentBenzeneCy;
   const points = createHexagonPoints(cx, cy, r, type);
-  
+
   // チュートリアルでない場合、環を描画 (シクロヘキサンの場合は二重結合なし)
   if (!questions[currentQuestionIndex].isTutorial) {
     drawRing(points, cx, cy, r, !isCyclohexane);
   }
-  
+
   const p = points[branchIndex];
   const bondLength = r * 0.7;
   const ux = (p.x - cx) / r, uy = (p.y - cy) / r;
   const tipX = p.x + ux * bondLength, tipY = p.y + uy * bondLength;
   drawLine(p.x, p.y, tipX, tipY, 3);
-  
+
   if (type === "vertical") {
-    if (branchIndex === 1) { textX = tipX - 6; textY = tipY - 2; } 
-    else if (branchIndex === 2) { textX = tipX + 4; textY = tipY + 8; } 
+    if (branchIndex === 1) { textX = tipX - 6; textY = tipY - 2; }
+    else if (branchIndex === 2) { textX = tipX + 4; textY = tipY + 8; }
     else { textX = tipX; textY = tipY; }
   } else {
-    if (branchIndex === 0) { textX = tipX + 10; textY = tipY + 18; } 
+    if (branchIndex === 0) { textX = tipX + 10; textY = tipY + 18; }
     else { textX = tipX; textY = tipY; }
   }
-  benzenePoints = points; currentBenzeneCx = cx; currentBenzeneCy = cy; benzeneType = type; startBranchIndex = branchIndex; 
+  benzenePoints = points; currentBenzeneCx = cx; currentBenzeneCy = cy; benzeneType = type; startBranchIndex = branchIndex;
 }
 
 function drawHorizontalPh() {
   const r = 20, cy = textY - 18, cx = textX + 20 + r;
   drawLine(textX, cy, textX + 20, cy, 3);
   const points = createHexagonPoints(cx, cy, r, "horizontal");
-  
+
   // Ph(フェニル基)は必ずベンゼン環なので true
   drawRing(points, cx, cy, r, true);
-  
+
   textX = points[0].x + 5; textY = cy + 18;
   benzenePoints = points; currentBenzeneCx = cx; currentBenzeneCy = cy; benzeneType = "horizontal"; startBranchIndex = 3;
 }
 
 function getBranchOffset(benzeneType, startBranchIndex, type, nx, ny) {
-  let offsetX = 0, offsetY = 0, cOffsetX = 5, cOffsetY = -18; 
+  let offsetX = 0, offsetY = 0, cOffsetX = 5, cOffsetY = -18;
   if (benzeneType === "vertical") {
     if (startBranchIndex === 1) {
-      if (type === "o") { offsetX = 5; offsetY = 10; cOffsetX = 5; cOffsetY = -18; } 
-      else if (type === "m") { offsetX = 5; offsetY = 20; cOffsetX = 5; cOffsetY = -18; } 
+      if (type === "o") { offsetX = 5; offsetY = 10; cOffsetX = 5; cOffsetY = -18; }
+      else if (type === "m") { offsetX = 5; offsetY = 20; cOffsetX = 5; cOffsetY = -18; }
       else if (type === "p") { offsetX = -6; offsetY = 30; cOffsetX = 5; cOffsetY = -18; }
     } else if (startBranchIndex === 2) {
-      if (type === "o") { offsetX = 4; offsetY = 21; cOffsetX = 5; cOffsetY = -18; } 
-      else if (type === "m") { offsetX = -7; offsetY = 30; cOffsetX = 9; cOffsetY = -18; } 
+      if (type === "o") { offsetX = 4; offsetY = 21; cOffsetX = 5; cOffsetY = -18; }
+      else if (type === "m") { offsetX = -7; offsetY = 30; cOffsetX = 9; cOffsetY = -18; }
       else if (type === "p") { offsetX = -20; offsetY = 23; cOffsetX = 10; cOffsetY = -18; }
     }
-  } else { 
+  } else {
     if (startBranchIndex === 3) {
-      if (type === "o") { offsetX = -15; offsetY = 3; cOffsetX = 10; cOffsetY = -18; } 
-      else if (type === "m") { offsetX = 2; offsetY = 3; cOffsetX = 5; cOffsetY = -18; } 
+      if (type === "o") { offsetX = -15; offsetY = 3; cOffsetX = 10; cOffsetY = -18; }
+      else if (type === "m") { offsetX = 2; offsetY = 3; cOffsetX = 5; cOffsetY = -18; }
       else if (type === "p") { offsetX = 8;  offsetY = 16;  cOffsetX = 5;  cOffsetY = -18; }
     } else if (startBranchIndex === 0) {
       if (type === "p") { offsetX = -25; offsetY = 14; cOffsetX = 10; cOffsetY = -18; }
@@ -463,20 +466,20 @@ function getBranchOffset(benzeneType, startBranchIndex, type, nx, ny) {
 }
 
 function drawBranchRelative(offset, type) {
-  const idx = (startBranchIndex + offset) % 6; 
+  const idx = (startBranchIndex + offset) % 6;
   const p = benzenePoints[idx];
   const dx = p.x - currentBenzeneCx, dy = p.y - currentBenzeneCy, len = Math.sqrt(dx*dx + dy*dy);
   const nx = dx / len, ny = dy / len, branchLen = 18;
   const bx = p.x + nx * branchLen, by = p.y + ny * branchLen;
   drawLine(p.x, p.y, bx, by, 3);
-  
+
   const res = getBranchOffset(benzeneType, startBranchIndex, type, nx, ny);
   textX = bx + res.offsetX; textY = by + res.offsetY; cursorOffsetX = res.cursorOffsetX; cursorOffsetY = res.cursorOffsetY;
 }
 
-function drawOrthoBranch() { drawBranchRelative(1, "o"); } 
-function drawMetaBranch() { drawBranchRelative(2, "m"); }  
-function drawParaBranch() { drawBranchRelative(3, "p"); }  
+function drawOrthoBranch() { drawBranchRelative(1, "o"); }
+function drawMetaBranch() { drawBranchRelative(2, "m"); }
+function drawParaBranch() { drawBranchRelative(3, "p"); }
 
 // ======================
 // 巡回モード（関数化・重複排除）
@@ -484,15 +487,15 @@ function drawParaBranch() { drawBranchRelative(3, "p"); }
 function moveCursorToNextRingCarbon() {
   if (!isRingTourMode) { isRingTourMode = true; currentRingIndex = startBranchIndex; }
   currentRingIndex = (currentRingIndex + 1) % 6;
-  
+
   const p = benzenePoints[currentRingIndex];
   const dx = p.x - currentBenzeneCx, dy = p.y - currentBenzeneCy, len = Math.sqrt(dx*dx + dy*dy);
   const bx = p.x + (dx / len) * 18, by = p.y + (dy / len) * 18;
   const q = questions[currentQuestionIndex];
-  
+
   // ↓↓↓ targetSubstance を使って左側ニトロ基の微調整モードをコントロール ↓↓↓
   window.isLeftNitroMode = q.targetSubstance && q.targetSubstance.includes("2,4,6") && (currentRingIndex === 0 || currentRingIndex === 5);
-  
+
   // 座標オフセットの共通化
   const offsets = {
     2: { dx: 5, dy: 14, cx: -5, cy: -10 },
@@ -512,7 +515,7 @@ function drawLeftNitroGroup(bx, by, currentText, key, offset1, offset2) {
   currentRingTextBuffer += currentText;
   if (window.leftNitroStartIndexes[key] == null) window.leftNitroStartIndexes[key] = drawCommands.length;
   drawCommands.length = window.leftNitroStartIndexes[key];
-  
+
   if (currentRingTextBuffer === "N") {
     drawText("N", bx - 22, by + offset1, 30);
     textX = bx - 15; textY = by + 10; cursorOffsetX = -22; cursorOffsetY = (key === 0) ? -10 : -8;
@@ -557,7 +560,7 @@ function executeRingAttachment(currentText) {
 // ======================
 // ゲーム進行・ボタン制御
 // ======================
-document.getElementById("startGameBtn").onclick = () => { 
+document.getElementById("startGameBtn").onclick = () => {
   document.getElementById("introScreen").style.display = "none";
   document.querySelector(".quiz-container").style.display = "flex";
   loadQuestion();
@@ -569,10 +572,10 @@ function loadQuestion() {
   updateQuestionGauge();
   retryCount = 0;
   const q = questions[currentQuestionIndex];
-  
+
   // ↓ 全体を <span> で囲むように修正 ↓
-  document.getElementById("questionBox").innerHTML = "<span>" + q.text + "</span>"; 
-  
+  document.getElementById("questionBox").innerHTML = "<span>" + q.text + "</span>";
+
   createStructureButtons();
   resetCanvas();
 }
@@ -593,7 +596,7 @@ function resetCanvas() {
   textX = 0; textY = 0; lastCharX = 0; lastCharY = 0; lastBaseX = 0; lastBaseY = 0;
   verticalDoubleMode = false; benzenePoints = []; userInputs = []; drawCommands = [];
   cursorOffsetX = 5; cursorOffsetY = -18;
-  
+
   isRingTourMode = false; currentRingIndex = 0; currentRingTextBuffer = "";
   window.isLeftNitroMode = false; window.leftNitroStartIndexes = {};
   messageBox.textContent = ""; actionBtn.style.display = "none"; submitBtn.disabled = false;
@@ -609,11 +612,13 @@ function resetCanvas() {
     drawStartBenzene("horizontal", 3);
   } else if (q.startBenzene === 5) {
     // 第3引数を true にしてシクロヘキサン環（二重結合なし）を描画
-    drawStartBenzene("vertical", 1, true); 
+    drawStartBenzene("vertical", 1, true);
   } else {
     drawStartBenzene("vertical", 2); // デフォルト(2)
   }
 }
+
+deleteBtn.addEventListener("click", resetCanvas);
 
 function submitAnswer() {
   const ignoreTokens = ["ー","｜"];
@@ -621,19 +626,20 @@ function submitAnswer() {
   const q = questions[currentQuestionIndex];
   const isCorrect = q.answers.includes(filteredInput);
   submitBtn.disabled = true;
-  
+  deleteBtn.style.display = "none";
+
   if (isCorrect) {
     explosionSound.currentTime = 0; explosionSound.play();
     explodeQuestionText();
     document.getElementById("questionBox").classList.add("explodedText");
     messageBox.style.color = "green";
-    
+
     score += (retryCount === 0) ? 5 : (retryCount === 1) ? 3 : (retryCount === 2) ? 1 : 0;
-    
+
     if (currentQuestionIndex < questions.length - 1) {
     actionBtn.textContent = "次の問題へ"; actionBtn.style.backgroundColor = "#4caf50";
       actionBtn.style.display = "inline-block";
-      actionBtn.onclick = () => { currentQuestionIndex++; loadQuestion(); };
+      actionBtn.onclick = () => { currentQuestionIndex++; loadQuestion(); deleteBtn.style.display = "inline-block"; };
     } else {
       clearAudio.currentTime = 0; clearAudio.play();
       showClearScreen();
@@ -651,7 +657,7 @@ function submitAnswer() {
     messageBox.textContent = "不正解…"; messageBox.style.color = "red";
     actionBtn.textContent = "やり直し"; actionBtn.style.backgroundColor = "#ff9800";
     actionBtn.style.display = "inline-block";
-    actionBtn.onclick = () => { retryCount++; resetCanvas(); }
+    actionBtn.onclick = () => { retryCount++; resetCanvas(); deleteBtn.style.display = "inline-block"; };
   }
 }
 submitBtn.addEventListener("click", submitAnswer);
@@ -683,7 +689,7 @@ function showClearScreen() {
           RANK  <span id="rankValue">  ${rank} </span>
         </div>
         <div id="hpResult"> 最終HP：${hp}  </div>
-        
+
         <div id="clearButtons">
           <button id="restartBtn"> もう1回遊ぶ </button>
           <button id="challengeBtn"> 難問に挑戦 </button>
@@ -699,23 +705,23 @@ function showClearScreen() {
     #restartBtn { background:#4caf50; } /* 通常の緑 */
     #challengeBtn { background:#e53935; } /* 難問らしい赤 */
     #restartBtn:hover, #challengeBtn:hover { transform: scale(1.05); } /* マウスを乗せたら少し大きくなる */
-    
+
     #rankText{ margin-top:30px; font-size:38px; font-weight:bold; color:#ffd54f; letter-spacing:3px;}
     #rankValue{ display:block; font-size:96px; margin-top:10px; color:#ffeb3b; text-shadow:  0 0 10px #fff176,  0 0 20px #ffee58,  0 0 40px #fdd835;}
     #hpResult{ margin-top:20px; font-size:28px; color:white;}
   `;
   document.head.appendChild(style);
-  
+
   // ▼ ボタンをクリックしたときの処理 ▼
   // 「もう1回遊ぶ」は今のページを再読み込み
   document.getElementById("restartBtn").onclick = () => location.reload();
-  
+
   // 「難問に挑戦」は muzui.html へページ移動
   document.getElementById("challengeBtn").onclick = () => {
     location.href = "muzui.html";
   };
-  
-  startFireworks(); 
+
+  startFireworks();
 }
 
 function restartGame() { location.reload(); }
@@ -725,7 +731,7 @@ function executeDrawing(targetText, savedTextY) {
   else if (targetText === "m-") drawMetaBranch();
   else if (targetText === "p-") drawParaBranch();
   else if (targetText === "｜") drawVerticalBond(false);
-  else if (targetText === "縦＝") drawVerticalBond(true); 
+  else if (targetText === "縦＝") drawVerticalBond(true);
   else if (targetText === "下＝") drawBottomDoubleBond(savedTextY);
   else if (targetText === "\\" || targetText === "/") drawDiagonalBond(targetText);
   else if (targetText === "Ph") drawHorizontalPh();
@@ -746,14 +752,14 @@ function setButtonVisual(btn, text) {
   else if (text === "＼") btn.innerHTML = `<div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center;"><svg width="24" height="24" viewBox="0 0 24 24"><line x1="4" y1="4" x2="20" y2="20" stroke="black" stroke-width="4" stroke-linecap="round"/></svg></div>`;
   else if (text === "／") btn.innerHTML = `<div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center;"><svg width="24" height="24" viewBox="0 0 24 24"><line x1="4" y1="20" x2="20" y2="4" stroke="black" stroke-width="4" stroke-linecap="round"/></svg></div>`;
   else if (text === "隣のCへ") btn.innerHTML = `<span style="font-size:16px; font-weight:bold; color:#d32f2f;">隣のCへ</span>`;
-  else btn.textContent = text; 
+  else btn.textContent = text;
 }
 
 function getEffectiveTextForCarbonyl(currentText, q) {
   if (!(currentText === "＝" && userInputs[userInputs.length - 1] === "C")) return currentText;
   const ansMult = q.answers.some(ans => (ans.match(/C＝O/g) || []).length >= 2);
   const specPos = userInputs.includes("o-") || (benzeneType === "vertical" && startBranchIndex === 2 && userInputs.includes("m-"));
-  
+
   if (specPos || ansMult) {
     carbonylCountInCurrentQuestion++;
     if (specPos || carbonylCountInCurrentQuestion >= 2) {
@@ -769,17 +775,17 @@ function checkTutorialError(q, effectiveText, currentText) {
   if (effectiveText === expectedBtn || currentText === expectedBtn || (effectiveText === "下＝" && expectedBtn === "縦＝")) {
     tutorialStep++; return false;
   }
-  
+
   const pCmdLen = drawCommands.length, pX = textX, pY = textY, pVDM = verticalDoubleMode, pCC = carbonylCountInCurrentQuestion, pCBM = carbonylBranchMode;
   const savedTextY = textY;
-  
+
   if (carbonylBranchMode === 1) { textX = originalTextXBeforeBottom; textY = originalTextYBeforeBottom + 42; }
   if (effectiveText === "下＝") { textY = textY + 24; } else if (carbonylBranchMode === 1) { textX = originalTextXBeforeBottom - 25; textY = originalTextYBeforeBottom + 46; }
 
   executeDrawing(effectiveText, savedTextY);
   tutorialMissSound.currentTime = 0; tutorialMissSound.play();
   messageBox.textContent = `ちがうよ！【 ${expectedBtn} 】を押してね`; messageBox.style.color = "red";
-  
+
   setTimeout(() => {
     if (!submitBtn.disabled) {
       drawCommands.length = pCmdLen; textX = pX; textY = pY; verticalDoubleMode = pVDM;
@@ -792,15 +798,15 @@ function checkTutorialError(q, effectiveText, currentText) {
 function executeFinalDrawing(effectiveText, currentText, q) {
   const savedTextY = textY;
   if (carbonylBranchMode === 1 && effectiveText !== "下＝") { textX = originalTextXBeforeBottom ; textY = originalTextYBeforeBottom + 42; }
-  if (effectiveText === "下＝") { textY = textY + 24; } 
-  else if (carbonylBranchMode === 1) { textX = originalTextXBeforeBottom - 25; textY = originalTextYBeforeBottom + 45; } 
+  if (effectiveText === "下＝") { textY = textY + 24; }
+  else if (carbonylBranchMode === 1) { textX = originalTextXBeforeBottom - 25; textY = originalTextYBeforeBottom + 45; }
   else if (carbonylBranchMode === 2) { textX = originalTextXBeforeBottom; textY = originalTextYBeforeBottom; }
-  
+
   executeDrawing(effectiveText, savedTextY);
   userInputs.push(currentText);
-  
-  if (effectiveText === "下＝") { carbonylBranchMode = 1; cursorOffsetX = -14; cursorOffsetY = -18; } 
-  else if (carbonylBranchMode === 1) { carbonylBranchMode = 2; cursorOffsetX = 5; cursorOffsetY = -18; } 
+
+  if (effectiveText === "下＝") { carbonylBranchMode = 1; cursorOffsetX = -14; cursorOffsetY = -18; }
+  else if (carbonylBranchMode === 1) { carbonylBranchMode = 2; cursorOffsetX = 5; cursorOffsetY = -18; }
   else if (carbonylBranchMode === 2) { carbonylBranchMode = 0; cursorOffsetX = 5; cursorOffsetY = -18; }
   if (q.isTutorial) updateTutorialMessage();
 }
@@ -833,17 +839,17 @@ function createStructureButtons() {
     ["o-", "m-", "p-"]
   ];
   const q = questions[currentQuestionIndex];
-  
+
   if (q && q.targetSubstance && q.targetSubstance.includes("無水フタル酸")) rows[2].push("＼", "／");
-  
+
   // 「2,4,6-」が含まれるか、startBenzeneが5(シクロヘキサン)ならボタンを追加
   if (q && ((q.targetSubstance && q.targetSubstance.includes("2,4,6-")) || q.startBenzene === 5)) {
     rows[2].push("隣のCへ");
   }
-  
+
   const buttonArea = document.getElementById("buttonArea");
   buttonArea.innerHTML = "";
-  
+
   // (以降は元の createStructureButtons のコードと同じです)
 
   rows.forEach(row => {
@@ -854,7 +860,7 @@ function createStructureButtons() {
       btn.addEventListener("click", () => {
         clickSound.currentTime = 0; clickSound.play();
         animateButtonToStructure(text, btn, () => handleElementButtonClick(text, q));
-      });      
+      });
       rowDiv.appendChild(btn);
     });
     buttonArea.appendChild(rowDiv);
